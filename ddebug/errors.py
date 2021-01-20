@@ -72,14 +72,16 @@ def _get_excepthook(file=None, pattern="{}-errors"):
 
 def post_tb(tb):
     timeout = 5
+    i = None
     try:
         log(f'{timeout} seconds for press enter for start pdb debugger... > ')
         i = inputimeout.inputimeout(timeout=timeout)
     except (inputimeout.TimeoutOccurred, KeyboardInterrupt, EOFError):
         pass
     else:
-        import pdb
-        pdb.post_mortem(tb)
+        if not (i in ("n","no","not")):
+            import pdb
+            pdb.post_mortem(tb)
 
 
 def set_excepthook(file=None, pattern="{}-errors"):
