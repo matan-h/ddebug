@@ -1,0 +1,19 @@
+[build-system]
+requires = ["flit_core >=2,<4",
+    "snoop", # dd require
+    "icecream", # dd require
+    "watchpoints", # dd require
+    "inputimeout", # errors require
+    "friendly_traceback", # _errors require
+    "stackprinter", # _errors require
+    "better_exceptions", # _errors require
+    "click", # `python -m ddebug` command require
+]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.metadata]
+module = "ddebug"
+author = "matan h"
+author-email = "matan.honig2@gmail.com"
+classifiers = ["License :: OSI Approved :: MIT License"]
+
