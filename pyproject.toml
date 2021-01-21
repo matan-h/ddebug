@@ -1,19 +1,37 @@
-[build-system]
-requires = ["flit_core >=2,<4",
-    "snoop", # dd require
-    "icecream", # dd require
-    "watchpoints", # dd require
-    "inputimeout", # errors require
-    "friendly_traceback", # _errors require
-    "stackprinter", # _errors require
-    "better_exceptions", # _errors require
-    "click", # `python -m ddebug` command require
+[tool.poetry]
+name = "ddebug"
+version = "0.0.1"
+description = "python library for cool debugging of python progams."
+authors = ["matan h <matan.honig2@gmail.com>"]
+# maintainers = ["matan h <matan.honig2@gmail.com>"]
+license = "MIT"
+
+readme = "README.md"
+homepage = "https://github.com/matan-h/ddebug"
+# repository = "https://github.com/matan-h/ddebug"
+# documentation = "https://github.com/matan-h/ddebug"
+keywords = [
+    "debug",
+    "quick",
+    "dd",
+    #todo
 ]
-build-backend = "flit_core.buildapi"
 
-[tool.flit.metadata]
-module = "ddebug"
-author = "matan h"
-author-email = "matan.honig2@gmail.com"
-classifiers = ["License :: OSI Approved :: MIT License"]
+[tool.poetry.dependencies]
+python = ">=3.6"
+snoop="*" # dd require
+icecream = "*" # dd require
+watchpoints = "*" # dd require
+inputimeout = "*" # errors require
+friendly_traceback = "*" # _errors require
+stackprinter = "*" # _errors require
+better_exceptions = "*" # _errors require
+click = "*" # `python -m ddebug` command require
 
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
+
+[tool.poetry.urls]
+issues = "https://github.com/matan-h/ddebug/issues"

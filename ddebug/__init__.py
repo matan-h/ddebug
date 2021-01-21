@@ -1,4 +1,3 @@
-"python library for debug python file"
 try:
     from .dd_class import dd, ClsDebugger, set_excepthook,set_atexit
 except ImportError:

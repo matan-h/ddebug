@@ -1,10 +1,14 @@
+import atexit
 import builtins
+# import io as _io
+import os
 import sys
 from collections.abc import Callable, Iterable
 import inspect
 
 import icecream
 from snoop import snoop
+import snoop.configuration as snoop_configuration
 import warnings
 import watchpoints
 
@@ -71,6 +75,34 @@ class IceCreamDebugger(icecream.IceCreamDebugger):
             out = prefix + context + f": call method '{name}' from class '{cls_name}'" + time
             self.outputFunction(out)
 
+    @property
+    def stream(self):
+        if hasattr(self, "_file"):
+            return self._file
+        else:
+            return sys.stderr
+
+    @stream.setter
+    def stream(self, value):
+        self._file = value
+        if value != sys.stderr:
+            self.outputFunction = self._output_txt
+        else:
+            self.outputFunction = icecream.DEFAULT_OUTPUT_FUNCTION
+
+    def _output_txt(self, s):
+        self._streamPrint(s)
+
+    def _streamPrint(self, *args):
+        file = sys.stderr
+        if hasattr(self, "_file"):
+            file = self._file
+        print(*args, file=file)
+
+
+def set_snoop_write(output):
+    snoop.config.write = snoop_configuration.get_write_function(output=output, overwrite=False)
+
 
 printer = IceCreamDebugger(prefix="dd| ")
 
@@ -88,6 +120,7 @@ class ClsDebugger:
         self.w = self.watch = watchpoints.watch.__call__
         self.unw = self.unwatch = watchpoints.watch.unwatch
         self.mincls = self.mc = self._process_class_call
+        self.set_excepthook = set_excepthook
 
     def __call__(self, *args, from_opp=None, **kwargs):
         """
@@ -134,6 +167,8 @@ class ClsDebugger:
             class_name = l.__name__
             warnings.warn("you have no method in '%s' class" % class_name)
         for func in inspect.getmembers(l, predicate=inspect.isfunction):
+            if func[0].startswith("_"):
+                continue
             real_func = func[1]
 
             def wrapper(*args, **kwargs):
@@ -194,6 +229,26 @@ class ClsDebugger:
         watchpoints.watch.enable = value
         snoop.config.enabled = value
         printer.enabled = value
+
+    @property
+    def stream(self):
+        return printer.stream
+
+    @stream.setter
+    def stream(self, value):
+        printer.stream = value
+        set_snoop_write(value)
+
+    def add_tmp_stream(self,with_print=True):
+        tmp_output_dir = (os.environ.get('TMPDIR') or os.environ.get('TEMP') or '/tmp')
+        tmp_output = os.path.join(tmp_output_dir, "ddebug.txt")
+        if with_print:
+            print(f"writing to {tmp_output}")
+        if with_print:
+            self.stream = _errors.Logger(open(tmp_output, "w"), self.stream)
+        else:
+            self.stream = open(tmp_output, "w")
+        atexit.register(lambda :self.stream.close())
 
     def __mul__(self, other):
         """

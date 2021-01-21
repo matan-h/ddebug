@@ -35,37 +35,41 @@ def _get_excepthook(file=None, pattern="{}-errors"):
 
     # #
     def excepthook(exc_type, exc_value, tb):
-        if isinstance(exc_type,bdb.BdbQuit):
-            if sys.excepthook == excepthook:
-                sys.__excepthook__(exc_type,exc_value,tb)
-        _type = lambda x: x.__name__ if type(x) == type else type(x).__name__
+        try:
+            if isinstance(exc_type,bdb.BdbQuit):
+                if sys.excepthook == excepthook:
+                    sys.__excepthook__(exc_type,exc_value,tb)
+            _type = lambda x: x.__name__ if type(x) == type else type(x).__name__
 
-        p(f"an {_type(exc_value)} has occurred:\nnow writing error files:\n")
+            p(f"an {_type(exc_value)} has occurred:\nnow writing error files:\n")
 
-        _mkdir(error_folder)
+            _mkdir(error_folder)
 
-        for func in _errors.errors_list:
-            is_first = _errors.errors_list.index(func) == 0
-            name = func.__name__
-            if name.startswith("func_"):
-                name = name.replace("func_", "", 1)
-            name += ".txt"
-            #
-            file_io = _mkfile(error_folder, name)
+            for func in _errors.errors_list:
+                is_first = _errors.errors_list.index(func) == 0
+                name = func.__name__
+                if name.startswith("func_"):
+                    name = name.replace("func_", "", 1)
+                name += ".txt"
+                #
+                file_io = _mkfile(error_folder, name)
 
-            stdout = stderr = file_io
-            #
-            if is_first:
-                stdout, stderr = _errors.Logger(file_io, sys.stdout), _errors.Logger(file_io, sys.stderr)
+                stdout = stderr = file_io
+                #
+                if is_first:
+                    stdout, stderr = _errors.Logger(file_io, sys.stdout), _errors.Logger(file_io, sys.stderr)
 
-            with redirect_stdout(stdout):
-                with redirect_stderr(stderr):
-                    func(exc_type, exc_value, tb)
-            file_io.close()
-            p(f"done create {name} error file")
-        ######
-        time.sleep(0.2)
-        post_tb(tb)
+                with redirect_stdout(stdout):
+                    with redirect_stderr(stderr):
+                        func(exc_type, exc_value, tb)
+                file_io.close()
+                p(f"done create {name} error file")
+            ######
+            time.sleep(0.2)
+            post_tb(tb)
+        except Exception as e:
+            logger.fatal(f"FATAL excepthook error ({e}) ")
+            logger.fatal("error when start excepthook. please report this case to https://github.com/matan-h/ddebug/issues ")
 
     return excepthook
 
