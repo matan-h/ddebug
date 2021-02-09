@@ -1,32 +1,31 @@
 import atexit
 import builtins
-# import io as _io
+import functools
 import os
 import sys
 from collections.abc import Callable, Iterable
 import inspect
 
 import icecream
-from snoop import snoop
+import snoop
 import snoop.configuration as snoop_configuration
-import warnings
-import watchpoints
+from snoop.formatting import DefaultFormatter
+import datetime
 
-try:
-    from .errors import set_excepthook, _errors, InteractiveException, set_atexit
-except ImportError:
-    from errors import set_excepthook, _errors, InteractiveException, set_atexit
+from .errors import set_excepthook, set_atexit
+from . import dd_util as util
+from .watch import watch, watch_callback
 
 # interactive mode check
 interactive = hasattr(sys, 'ps1')
 if interactive:
-    raise InteractiveException()
+    raise util.InteractiveException()
 
 
 class IceCreamDebugger(icecream.IceCreamDebugger):
     def _formatArgs(self, callFrame, callNode, prefix, context, args):
         """
-        copy of ic._formatArgs in but with operators support after AttributeError
+        copy of ic._formatArgs in but with operators
         """
         source = icecream.Source.for_frame(callFrame)
         try:
@@ -61,14 +60,15 @@ class IceCreamDebugger(icecream.IceCreamDebugger):
         """
         if self.enabled:
             prefix = icecream.callOrValue(self.prefix)
-
-            callNode = icecream.Source.executing(callFrame).node
+            executing = icecream.Source.executing(callFrame)
+            callNode = executing.node
             if callNode is None:
                 self.outputFunction(
                     f"error NoSourceAvailableError(Failed to access the underlying source code for analysis) :call method '{name}' from class '{cls_name}'")
                 return
 
             context = self._formatContext(callFrame, callNode)
+
             # context = context.split(" at ")
             #
             time = self._formatTime()
@@ -84,6 +84,7 @@ class IceCreamDebugger(icecream.IceCreamDebugger):
 
     @stream.setter
     def stream(self, value):
+        # ig
         self._file = value
         if value != sys.stderr:
             self.outputFunction = self._output_txt
@@ -99,12 +100,16 @@ class IceCreamDebugger(icecream.IceCreamDebugger):
             file = self._file
         print(*args, file=file)
 
+    def dd_format_frame(self, text, line, filename, code_qualname):
+        self.outputFunction(f"""File "{os.path.basename(filename)}", line {line}, in {code_qualname}\n\t{text}""")
+
 
 def set_snoop_write(output):
-    snoop.config.write = snoop_configuration.get_write_function(output=output, overwrite=False)
+    snoop.snoop.config.write = snoop_configuration.get_write_function(output=output, overwrite=False)
 
 
 printer = IceCreamDebugger(prefix="dd| ")
+watch_callback.printer = printer.outputFunction
 
 
 def First(mlist):
@@ -117,10 +122,13 @@ def First(mlist):
 
 class ClsDebugger:
     def __init__(self):
-        self.w = self.watch = watchpoints.watch.__call__
-        self.unw = self.unwatch = watchpoints.watch.unwatch
-        self.mincls = self.mc = self._process_class_call
+        self.w = self.watch = watch.__call__
+        self.unw = self.unwatch = watch.unwatch
+        self.mc = self.mincls
         self.set_excepthook = set_excepthook
+        self.set_atexit = set_atexit
+        self.icecream_includeContext = printer.includeContext
+        self._self_snoop = None
 
     def __call__(self, *args, from_opp=None, **kwargs):
         """
@@ -138,10 +146,10 @@ class ClsDebugger:
             from_opp = inspect.currentframe()
 
         if inspect.isclass(first):
-            return self._process_class_snoop(first)
+            return self.process_class_snoop(first)
 
         elif isinstance(first, Callable):
-            return snoop(*args[1:], **kwargs)(first)
+            return snoop.snoop(*args[1:], **kwargs)(first)
 
         elif printer.enabled:
             callFrame = from_opp.f_back
@@ -151,7 +159,7 @@ class ClsDebugger:
     @staticmethod
     def _return_args(args):
         """
-        :return: args[0] if that's it. else return all args
+        :return: args[0] if that it. else return all args
         """
         if len(args) == 1:
             return args[0]
@@ -159,56 +167,33 @@ class ClsDebugger:
             return args
 
     @staticmethod
-    def _process_class_call(l):
+    def mincls(l):
         """
         process class for mincls function
         """
-        if not inspect.getmembers(l, predicate=inspect.isfunction):
-            class_name = l.__name__
-            warnings.warn("you have no method in '%s' class" % class_name)
         for func in inspect.getmembers(l, predicate=inspect.isfunction):
             if func[0].startswith("_"):
                 continue
+
             real_func = func[1]
 
+            @functools.wraps(real_func)
             def wrapper(*args, **kwargs):
-                printer.print_class_call(wrapper.__name__, l.__name__, inspect.currentframe().f_back)
+                printer.print_class_call(func[0], l.__name__, inspect.currentframe().f_back)
                 return real_func(*args, **kwargs)
 
-            wrapper.__doc__ = real_func.__doc__
-            wrapper.__name__ = real_func.__name__
-            wrapper.__annotations__ = real_func.__annotations__
-            wrapper.__defaults__ = real_func.__defaults__
-            wrapper.__kwdefaults__ = real_func.__kwdefaults__
-            wrapper.__qualname__ = real_func.__qualname__
-            wrapper.__module__ = real_func.__module__
-
             setattr(l, func[0], wrapper)
-            # print(f"setattr({l}, {func[0]}, {wrapper})")
         return l
 
     @staticmethod
-    def _process_class_snoop(l):
+    def process_class_snoop(l):
         """
         do @snoop of all functions on class
         """
-        if not inspect.getmembers(l, predicate=inspect.isfunction):
-            class_name = l.__name__
-            warnings.warn("class '%s' no have any method" % class_name)
         for func in inspect.getmembers(l, predicate=inspect.isfunction):
             real_func = func[1]
-
-            setattr(l, func[0], snoop()(real_func))
-            # print(f"setattr({l}, {func[0]}, {wrapper})")
+            setattr(l, func[0], snoop.snoop()(real_func))
         return l
-
-    @property
-    def friendly_traceback_lang(self):
-        return _errors.friendly_traceback.get_lang()
-
-    @friendly_traceback_lang.setter
-    def friendly_traceback_lang(self, lang):
-        _errors.friendly_traceback.set_lang(lang)
 
     # # # # #
     def install(self, names: Iterable = ("dd",)):
@@ -220,14 +205,89 @@ class ClsDebugger:
         for name in names:
             setattr(builtins, name, self)
 
+    # # # #
+    def print_stack(self, sort=True):
+        if sort:
+            f = lambda x: reversed(list(x))
+        else:
+            f = lambda x: x
+        caller_frame = inspect.currentframe()
+        text = icecream.Source.executing(caller_frame.f_back).text()
+        q = "'{}'"
+        printer.outputFunction(f"ddStack({q.format(text) if text else ''}):")
+        for frame in f(self._get_frames(caller_frame)):
+            executing = icecream.Source.executing(frame)
+            text = executing.text()
+            if text:
+                printer.dd_format_frame(text, executing.frame.f_lineno, executing.source.filename,
+                                        executing.code_qualname())
+
+    # noinspection PyMethodMayBeStatic
+    def _get_frames(self, caller_frame):
+        one_frame = caller_frame
+        n = 0
+        while 1:
+            n += 1
+            one_frame = one_frame.f_back
+            if one_frame:
+                yield one_frame
+
+            else:
+                break
+
+    ##
+    def add_tmp_stream(self, with_print=True):
+        tmp_output_dir = (os.environ.get('TMPDIR') or os.environ.get('TEMP') or '/tmp')
+        tmp_output = os.path.join(tmp_output_dir, "ddebug.txt")
+        if with_print:
+            self.stream = util.Logger(open(tmp_output, "w"), self.stream)
+        else:
+            self.stream = open(tmp_output, "w")
+        atexit.register(lambda: self.stream.close())
+        return tmp_output
+
+    ####
+    def add_output_folder(self, with_date=False, with_errors=True, pyfile=None, folder=None):
+        from os import path
+        if not pyfile:
+            pyfile = util.getExecPath()
+        if not folder:
+            date = "log"
+            if with_date:
+                date = datetime.datetime.now().strftime('%m-%d-%Y,%H-%M-%S')
+            folder = f"{path.splitext(path.basename(pyfile))[0]}_{date}"
+        if not path.exists(folder):
+            os.mkdir(folder)
+        else:
+            print(f"WARNING:the output folder \"{folder}\" is already exists.", file=sys.stderr)
+
+        #
+
+        def add_stream(name, std):
+            st = open(path.join(folder, f"{name}-log.txt"), "w")
+            atexit.register(st.close)
+            return util.Logger(st, std)
+
+        # watch.set_printer(lambda x:print(x,file=add_stream("watch",sys.stderr)))
+        printer.stream = add_stream("icecream", sys.stderr)
+        self.watch_stream = add_stream("watch", sys.stderr)
+        set_snoop_write(add_stream("snoop", sys.stderr))
+        if with_errors:
+            efile = os.path.join(folder, "error")
+            if sys.excepthook == sys.__excepthook__:  # sys.excepthook not change
+                self.set_excepthook(file=efile, pattern="{}.txt")
+            else:
+                self.set_atexit(file=efile, pattern="{}.txt")
+
     @property
     def enabled(self):
-        return watchpoints.watch.enable and snoop.config.enabled and printer.enabled
+        return watch.enable or snoop.snoop.config.enabled or printer.enabled
 
     @enabled.setter
     def enabled(self, value: bool):
-        watchpoints.watch.enable = value
-        snoop.config.enabled = value
+        watch.enable = not value
+
+        snoop.snoop.config.enabled = value
         printer.enabled = value
 
     @property
@@ -238,17 +298,50 @@ class ClsDebugger:
     def stream(self, value):
         printer.stream = value
         set_snoop_write(value)
+        self.watch_stream = value
 
-    def add_tmp_stream(self,with_print=True):
-        tmp_output_dir = (os.environ.get('TMPDIR') or os.environ.get('TEMP') or '/tmp')
-        tmp_output = os.path.join(tmp_output_dir, "ddebug.txt")
-        if with_print:
-            print(f"writing to {tmp_output}")
-        if with_print:
-            self.stream = _errors.Logger(open(tmp_output, "w"), self.stream)
-        else:
-            self.stream = open(tmp_output, "w")
-        atexit.register(lambda :self.stream.close())
+    @property
+    def watch_stream(self):
+        return watch_callback.file
+
+    @watch_stream.setter
+    def watch_stream(self, value):
+        watch_callback.file = value
+
+    # noinspection PyMethodMayBeStatic
+    def snoopconfig(self,
+                    out=None,
+                    prefix='',
+                    columns='time',
+                    overwrite=False,
+                    color=None,
+                    enabled=True,
+                    watch_extras=(),
+                    replace_watch_extras=None,
+                    formatter_class=DefaultFormatter):
+        snoop.install(
+            builtins=False,
+            snoop="snoop",
+            pp="pp",
+            spy="spy",
+            out=out,
+            prefix=prefix,
+            columns=columns,
+            overwrite=overwrite,
+            color=color,
+            enabled=enabled,
+            watch_extras=watch_extras,
+            replace_watch_extras=replace_watch_extras,
+            formatter_class=formatter_class,
+        )
+
+    @property
+    def friendly_traceback_lang(self):
+        return util.friendly_traceback.get_lang()
+
+    @friendly_traceback_lang.setter
+    def friendly_traceback_lang(self, lang):
+        util.friendly_traceback.set_lang(lang)
 
     def __mul__(self, other):
         """
@@ -297,6 +390,14 @@ class ClsDebugger:
         do dd(a) on a&d
         """
         return self.__call__(other, from_opp=inspect.currentframe())
+
+    def __enter__(self):
+        self._self_snoop = snoop.snoop()
+        self._self_snoop.__enter__(1)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self._self_snoop:
+            self._self_snoop.__exit__(exc_type, exc_val, exc_tb, 1)
 
 
 dd = ClsDebugger()
