@@ -179,7 +179,7 @@ dd.stream = open("output.txt","w")
 ```
 **Don't forget to close the file.**
 If you do not close the file - the file will probably not write.
-My recommendation is to use built-in`atexit` module to close the file (you can use it even if you do `dd.set_atexit()`):
+My recommendation is to use built-in`atexit` module to close the file (you can use it even if you alredy use atexit (e.g. `dd.set_atexit()`):
 ```python
 import atexit
 from ddebug import dd
@@ -226,7 +226,12 @@ You can [config snoop](https://github.com/alexmojaki/snoop#output-configuration)
 `dd.snoopconfig(snoop-config-options)`.
 All options but builtins and snoop names are valid.
 
-You can config `icecream-includeContext` (dd() calls filename, line number, and parent function to dd output.) by:`dd.icecream_includeContext = True`.
+You can config `icecream.includeContext` (dd() calls filename, line number, and parent function to dd output.) by:`dd.icecream_includeContext = True`.
+
+you can config [`friendly-traceback.language`](https://aroberge.github.io/friendly-traceback-docs/docs/html/usage_adv.html#language-used) by `dd.friendly_traceback_lang = "<languages>"`
+
+## with dd
+`with dd` equal to `with snoop`.
 
 ## Dependencies
 dd depends on the python librarys:
