@@ -6,7 +6,7 @@ ddebug is both
 [snoop](https://github.com/alexmojaki/snoop)
 but simple and quick to use in the style of [q](https://github.com/zestyping/q).
 ## Installation
-Install using pip: ```(python -m) pip install ddebug```
+Install using pip: ```(python -m) pip install -i https://test.pypi.org/simple/ ddebug```
 
 
 ## Simple Example
