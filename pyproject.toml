@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ddebug"
-version = "0.0.2.1"
+version = "0.0.2.4"
 description = "python library for cool debugging of python progams."
 authors = ["matan h <matan.honig2@gmail.com>"]
 license = "MIT"
@@ -12,14 +12,16 @@ homepage = "https://github.com/matan-h/ddebug"
 keywords = [
     "ddebug",
     "debug",
+    "simple",
     "quick",
+    "easy",
     "dd",
-    # todo
+    "debuging"
 ]
 
 [tool.poetry.dependencies]
 python = ">=3.6"
-snoop="*" # main require
+snoop = "*" # main require
 icecream = "*" # main require
 watchpoints = "*" # watch require
 friendly_traceback = "*" # errors require

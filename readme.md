@@ -1,12 +1,15 @@
 # ddebug
-ddebug is a python library for simple debugging of python progams.
+ddebug is a python library for simple debugging of python progams. It works only within a python file, not in the console.
 
 ddebug is both
 [icecream](https://github.com/gruns/icecream) and
 [snoop](https://github.com/alexmojaki/snoop)
 but simple and quick to use in the style of [q](https://github.com/zestyping/q).
+
+ddebug works with python 3.6+.
+
 ## Installation
-Install using pip: ```(python -m) pip install git+https://github.com/matan-h/ddebug.git```
+Install using pip: ```(python -m) pip install ddebug```
 
 
 ## Simple Example
@@ -15,7 +18,7 @@ from ddebug import dd
 @dd #do @snoop on a function
 def foo(n):
     return n+333
-@dd # do @snoop on all class functions (only in ddebug)
+@dd # do @snoop on all class functions (only possible in ddebug)
 class A:
     def a(self):
         pass
@@ -49,7 +52,7 @@ Output:
 ```shell
 dd| python-file.py:8 in <module>: call method 'a' from class 'A' at 11:34:15.383
 ```
-mincls does not yet support the \__<>__  functions(e.g. \_\_init\__).
+mincls does not yet support the __ <> __  functions(e.g. __ init __).
 
 ### Concatenating
 If you use ddebug as a function like icecream, e.g. `dd(value)` it will returns the arguments you passed in to it:
@@ -91,7 +94,7 @@ dd.set_atexit()
 if you want to choose file name:
 just pass `file=<file>` to the function.
 ### watch
-`ddebug` has a `watch` and `unwatch` (named also `w` and `unw`) based on [watchpoints](https://github.com/gaogaotiantian/watchpoints) (most of the changes I did was to make watchpoints more readable and add possibilty to change stream)
+`ddebug` has a `watch` and `unwatch` (named also `w` and `unw`) based on [watchpoints](https://github.com/gaogaotiantian/watchpoints) (most of the changes I did were to make watchpoints more readable and add possibilty to change stream)
 ```python
 from ddebug import dd
 a = []
@@ -231,10 +234,11 @@ You can config `icecream.includeContext` (dd() calls filename, line number, and 
 you can config [`friendly-traceback.language`](https://aroberge.github.io/friendly-traceback-docs/docs/html/usage_adv.html#language-used) by `dd.friendly_traceback_lang = "<languages>"`
 
 ## with dd
-`with dd` equal to `with snoop`.
+`with dd` equal to [`with snoop`](https://github.com/alexmojaki/snoop#basic-snoop-usage).
+
 
 ## Dependencies
-dd depends on the python librarys:
+ddebug depends on the python librarys:
 * [icecream](https://github.com/gruns/icecream) - main dependency
 * [snoop](https://github.com/alexmojaki/snoop) - main dependency
 * [watchpoints](https://github.com/gaogaotiantian/watchpoints) - for `dd.watch` and `dd.unwatch`
@@ -244,3 +248,5 @@ dd depends on the python librarys:
 
 ## Contribute
 On all errors, problems or suggestions please open a [github issue](https://github.com/matan-h/ddebug/issues)
+
+<a href="https://www.buymeacoffee.com/matanh" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-blue.png" alt="Buy Me A Coffee" height="47" width="200"></a>
