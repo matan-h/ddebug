@@ -23,9 +23,9 @@ def _get_excepthook(file=None, pattern="{}-errors.txt"):
             print(f"an {_type(exc_value)} has occurred:\nnow writing error file:\n", file=sys.stderr)
 
             with open(error_file, "w") as efile:
-                stackprinter_text = util.get_stackprinter(exc_type, exc_value, tb)
-                print(stackprinter_text, file=sys.stderr)
-                efile.write(stackprinter_text)
+                rich_text = util.get_rich(exc_type, exc_value, tb)
+                print(rich_text, file=sys.stderr)
+                efile.write(rich_text)
                 #
                 print("\n", file=sys.stderr)
                 efile.write("\n\n")

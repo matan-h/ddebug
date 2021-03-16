@@ -3,7 +3,6 @@ import sys
 from watchpoints.watch import Watch as _Watch
 
 # from watchpoints.watch_print import WatchPrint as _WatchPrint
-
 # from watchpoints import watch
 
 get_printer = lambda file=sys.stderr: lambda obj: print(obj, file=file)
@@ -55,9 +54,10 @@ watch.config(callback=watch.custom_callback)
 # )
 
 if __name__ == '__main__':
-    io = open("../tt.txt", "w")
-    watch_callback.file = io
-    atexit.register(io.close)
+    io1 = open("../tt.txt", "w")
+    atexit.register(io1.close)
+    io2 = open("../t.txt", "w")
+    atexit.register(io2.close)
 
 
     class X:
@@ -67,7 +67,9 @@ if __name__ == '__main__':
     a = "prev_a"
     b = "prev_b"
     x = X()
-    watch(a, b, x)
+    watch(a,file=io1)
+    watch(b,x,file=io2)
     a = "ab"
     b = "ba"
     x.s = 5
+

@@ -15,6 +15,7 @@ import datetime
 from .errors import set_excepthook, set_atexit
 from . import dd_util as util
 from .watch import watch, watch_callback
+import rich
 
 
 class IceCreamDebugger(icecream.IceCreamDebugger):
@@ -104,6 +105,7 @@ def set_snoop_write(output):
 printer = IceCreamDebugger(prefix="dd| ")
 watch_callback.printer = printer.outputFunction
 
+
 def First(mlist):
     """
     :return: mlist[0] if there is
@@ -123,6 +125,7 @@ class ClsDebugger:
         self._def_name = def_name
         self.deep = snoop.pp.deep
         self._self_snoop = snoop.snoop()
+        self.inspect = rich.inspect
 
     def __call__(self, *args, from_frame=None, **kwargs):
         """

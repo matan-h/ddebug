@@ -25,7 +25,7 @@ snoop = "*" # main require
 icecream = "*" # main require
 watchpoints = "*" # watch require
 friendly_traceback = "*" # errors require
-stackprinter = "*" # errors require
+rich = "*" # errors (and dd.inspect) require
 inputimeout = "*" # for post pdb require
 
 [build-system]

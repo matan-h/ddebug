@@ -2,6 +2,6 @@ icecream
 snoop
 inputimeout
 friendly_traceback
-stackprinter
+rich
 watchpoints
 

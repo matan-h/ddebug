@@ -4,7 +4,6 @@ import sys
 import friendly_traceback
 import friendly_traceback.core
 
-import stackprinter
 import io
 
 
@@ -37,8 +36,16 @@ class Logger:
         self.log.close()
 
 
-def get_stackprinter(exc_type, exc_value, tb):
-    return stackprinter.format((exc_type, exc_value, tb))
+def get_rich(exc_type, exc_value, tb):
+    from rich import Console
+    import rich
+    from rich.traceback import Traceback
+    with io.StringIO() as output:
+        console = Console() or rich.get_console()
+        console.file = output
+        console.print(Traceback().from_exception(exc_type, exc_value, tb))
+        value = output.getvalue()
+    return value
 
 
 def get_friendly_traceback(exc_type, exc_value, tb):
