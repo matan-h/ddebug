@@ -1,7 +1,6 @@
 import os
 import sys
 
-
 import friendly_traceback
 import friendly_traceback.core
 
@@ -49,12 +48,11 @@ def get_friendly_traceback(exc_type, exc_value, tb):
 
 
 def post_tb(tb):
-
     timeout = 5
     # i = None
     try:
         import inputimeout
-    except (ImportError,ModuleNotFoundError) as e:
+    except (ImportError, ModuleNotFoundError) as e:
         print(f"error when import inputimeout: ({e})", file=sys.stderr)
         return
     try:
@@ -72,3 +70,6 @@ def post_tb(tb):
 class InteractiveException(OSError):
     def __init__(self):
         super().__init__('Ddebug cant run in Interactive mode. (e.g. python -i).')
+
+
+regex_spaces = "[ \t]*"

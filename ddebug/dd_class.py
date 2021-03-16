@@ -3,7 +3,7 @@ import builtins
 import functools
 import os
 import sys
-from collections.abc import Callable, Iterable
+from typing import Iterable
 import inspect
 
 import icecream
@@ -15,11 +15,6 @@ import datetime
 from .errors import set_excepthook, set_atexit
 from . import dd_util as util
 from .watch import watch, watch_callback
-
-# interactive mode check
-interactive = hasattr(sys, 'ps1')
-if interactive:
-    raise util.InteractiveException()
 
 
 class IceCreamDebugger(icecream.IceCreamDebugger):
@@ -48,8 +43,6 @@ class IceCreamDebugger(icecream.IceCreamDebugger):
         try:
             out = self._format(callFrame, *args)
         except icecream.NoSourceAvailableError as err:
-            import traceback
-            traceback.print_exc()
             prefix = icecream.callOrValue(self.prefix)
             out = prefix + 'Error: ' + err.infoMessage
         self.outputFunction(out)
@@ -111,7 +104,6 @@ def set_snoop_write(output):
 printer = IceCreamDebugger(prefix="dd| ")
 watch_callback.printer = printer.outputFunction
 
-
 def First(mlist):
     """
     :return: mlist[0] if there is
@@ -121,16 +113,18 @@ def First(mlist):
 
 
 class ClsDebugger:
-    def __init__(self):
+    def __init__(self, def_name="dd"):
         self.w = self.watch = watch.__call__
         self.unw = self.unwatch = watch.unwatch
         self.mc = self.mincls
         self.set_excepthook = set_excepthook
         self.set_atexit = set_atexit
         self.icecream_includeContext = printer.includeContext
-        self._self_snoop = None
+        self._def_name = def_name
+        self.deep = snoop.pp.deep
+        self._self_snoop = snoop.snoop()
 
-    def __call__(self, *args, from_opp=None, **kwargs):
+    def __call__(self, *args, from_frame=None, **kwargs):
         """
         call when do dd()
 
@@ -141,20 +135,71 @@ class ClsDebugger:
 
         :return: see _return_args
         """
+        import re as regex
         first = First(args)
-        if from_opp is None:
-            from_opp = inspect.currentframe()
+        if from_frame is None:
+            from_frame = inspect.currentframe()
+        from_frame = from_frame.f_back
 
-        if inspect.isclass(first):
-            return self.process_class_snoop(first)
+        # find @dd (like q)
+        code_context = inspect.getframeinfo(from_frame).code_context
 
-        elif isinstance(first, Callable):
-            return snoop.snoop(*args[1:], **kwargs)(first)
+        if code_context:
+            code_context = code_context[0].strip()
 
-        elif printer.enabled:
-            callFrame = from_opp.f_back
-            printer.format_ic(callFrame, *args)
+            #####################################
+            if code_context.startswith("def"):  # @dd
+                return self.process_snoop(first, args[1:], kwargs, from_par=False, isclass=False)
+
+            if code_context.startswith("class"):
+                return self.process_snoop(first, args[1:], kwargs, from_par=False, isclass=True)
+
+            if code_context.startswith(f"@{self._def_name}("):  # and code_context.endswith(")"):  # @dd()
+                return functools.partial(self.process_snoop, args=args, kwargs=kwargs, from_par=False,
+                                         isclass=inspect.isclass)
+
+                # return self.process_snoop(first,args=args, kwargs=kwargs, from_par=True, isclass=inspect.isclass(first))
+                # self._self_snoop = snoop.snoop(*args, **kwargs)
+                # return self._self_snoop
+
+            #
+
+            elif regex.findall(
+                    rf"^{util.regex_spaces}with {self._def_name}{util.regex_spaces}\(.*?\){util.regex_spaces}:",
+                    code_context):  # with dd(*args, **kwargs):
+                if args or kwargs:
+                    self._self_snoop = snoop.snoop(*args, **kwargs)
+                return self
+
+        if printer.enabled:  # and not return yet
+            printer.format_ic(from_frame, *args)
+            #
         return self._return_args(args)
+
+    def process_snoop(self, fnc, args, kwargs, from_par, isclass):
+        if callable(isclass):
+            isclass = isclass(fnc)
+        if args or kwargs:
+            self._self_snoop = snoop.snoop(*args, **kwargs)
+        #
+        if from_par:
+            if isclass:
+                return lambda cls: self.process_snoop(cls, args=args, kwargs=kwargs, from_par=False, isclass=isclass)
+                # self._self_snoop = snoop.snoop(*args, **kwargs)
+                # return functools.partial(self.process_snoop,args = args,kwargs = kwargs)
+            else:
+                return self._self_snoop
+
+        #
+        else:
+            if isclass:
+                for func in inspect.getmembers(fnc, predicate=inspect.isfunction):
+                    real_func = func[1]
+                    #
+                    setattr(fnc, func[0], self._self_snoop(real_func))
+                return fnc
+            else:
+                return self._self_snoop(fnc)
 
     @staticmethod
     def _return_args(args):
@@ -185,55 +230,39 @@ class ClsDebugger:
             setattr(l, func[0], wrapper)
         return l
 
-    @staticmethod
-    def process_class_snoop(l):
-        """
-        do @snoop of all functions on class
-        """
-        for func in inspect.getmembers(l, predicate=inspect.isfunction):
-            real_func = func[1]
-            setattr(l, func[0], snoop.snoop()(real_func))
-        return l
-
     # # # # #
     def install(self, names: Iterable = ("dd",)):
         """
         add dd name to builtins. (like snoop)
+
+        :return: self
         """
         if type(names) == str:
             names = (names,)
         for name in names:
+            name: str
             setattr(builtins, name, self)
+        return self
 
     # # # #
-    def print_stack(self, sort=True):
-        if sort:
-            f = lambda x: reversed(list(x))
-        else:
-            f = lambda x: x
-        caller_frame = inspect.currentframe()
-        text = icecream.Source.executing(caller_frame.f_back).text()
+    @staticmethod
+    def print_stack(reverse=False):
+        stack = inspect.stack()[1:]
+        #
         q = "'{}'"
+        text = icecream.Source.executing(stack[0].frame).text()
         printer.outputFunction(f"ddStack({q.format(text) if text else ''}):")
-        for frame in f(self._get_frames(caller_frame)):
-            executing = icecream.Source.executing(frame)
+
+        if reverse:
+            stack = reversed(stack)
+
+        for info in stack:
+
+            executing = icecream.Source.executing(info.frame)
             text = executing.text()
             if text:
-                printer.dd_format_frame(text, executing.frame.f_lineno, executing.source.filename,
+                printer.dd_format_frame(text, info.lineno, info.filename,
                                         executing.code_qualname())
-
-    # noinspection PyMethodMayBeStatic
-    def _get_frames(self, caller_frame):
-        one_frame = caller_frame
-        n = 0
-        while 1:
-            n += 1
-            one_frame = one_frame.f_back
-            if one_frame:
-                yield one_frame
-
-            else:
-                break
 
     ##
     def add_tmp_stream(self, with_print=True):
@@ -278,6 +307,7 @@ class ClsDebugger:
                 self.set_excepthook(file=efile, pattern="{}.txt")
             else:
                 self.set_atexit(file=efile, pattern="{}.txt")
+        return folder
 
     @property
     def enabled(self):
@@ -308,7 +338,6 @@ class ClsDebugger:
     def watch_stream(self, value):
         watch_callback.file = value
 
-    # noinspection PyMethodMayBeStatic
     def snoopconfig(self,
                     out=None,
                     prefix='',
@@ -334,6 +363,7 @@ class ClsDebugger:
             replace_watch_extras=replace_watch_extras,
             formatter_class=formatter_class,
         )
+        return self
 
     @property
     def friendly_traceback_lang(self):
@@ -347,57 +377,55 @@ class ClsDebugger:
         """
         do dd(a) on dd*a
         """
-        return self.__call__(other, from_opp=inspect.currentframe())
+        return self.__call__(other, from_frame=inspect.currentframe())
 
     def __matmul__(self, other):
         """
         do dd(a) on dd@a
         """
-        return self.__call__(other, from_opp=inspect.currentframe())
+        return self.__call__(other, from_frame=inspect.currentframe())
 
     def __add__(self, other):
         """
         do dd(a) on dd+a
         """
-        return self.__call__(other, from_opp=inspect.currentframe())
+        return self.__call__(other, from_frame=inspect.currentframe())
 
     def __lshift__(self, other):
         """
         do dd(a) on dd>>a
         """
-        return self.__call__(other, from_opp=inspect.currentframe())
+        return self.__call__(other, from_frame=inspect.currentframe())
 
     def __rshift__(self, other):
         """
         do dd(a) on dd<<a
         """
-        return self.__call__(other, from_opp=inspect.currentframe())
+        return self.__call__(other, from_frame=inspect.currentframe())
 
     def __ror__(self, other):
         """
         do dd(a) on a|dd
         """
-        return self.__call__(other, from_opp=inspect.currentframe())
+        return self.__call__(other, from_frame=inspect.currentframe())
 
     def __or__(self, other):
         """
         do dd(a) on dd|a
         """
-        return self.__call__(other, from_opp=inspect.currentframe())
+        return self.__call__(other, from_frame=inspect.currentframe())
 
     def __and__(self, other):
         """
         do dd(a) on a&d
         """
-        return self.__call__(other, from_opp=inspect.currentframe())
+        return self.__call__(other, from_frame=inspect.currentframe())
 
-    def __enter__(self):
-        self._self_snoop = snoop.snoop()
+    def __enter__(self, *args, **kwargs):
         self._self_snoop.__enter__(1)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if self._self_snoop:
-            self._self_snoop.__exit__(exc_type, exc_val, exc_tb, 1)
+        self._self_snoop.__exit__(exc_type, exc_val, exc_tb, 1)
 
 
 dd = ClsDebugger()
