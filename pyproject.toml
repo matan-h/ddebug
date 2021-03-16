@@ -24,7 +24,7 @@ python = ">=3.6"
 snoop = "*" # main require
 icecream = "*" # main require
 watchpoints = "*" # watch require
-friendly_traceback = "*" # errors require
+friendly = "*" # errors require
 rich = "*" # errors (and dd.inspect) require
 inputimeout = "*" # for post pdb require
 

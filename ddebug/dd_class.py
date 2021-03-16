@@ -369,12 +369,12 @@ class ClsDebugger:
         return self
 
     @property
-    def friendly_traceback_lang(self):
-        return util.friendly_traceback.get_lang()
+    def friendly_lang(self):
+        return util.friendly.get_lang()
 
-    @friendly_traceback_lang.setter
-    def friendly_traceback_lang(self, lang):
-        util.friendly_traceback.set_lang(lang)
+    @friendly_lang.setter
+    def friendly_lang(self, lang):
+        util.friendly.set_lang(lang)
 
     def __mul__(self, other):
         """

@@ -30,14 +30,16 @@ def _get_excepthook(file=None, pattern="{}-errors.txt"):
                 print("\n", file=sys.stderr)
                 efile.write("\n\n")
                 #
-                friendly_traceback_text = util.get_friendly_traceback(exc_type, exc_value, tb)
-                print(friendly_traceback_text, file=sys.stderr)
-                efile.write(friendly_traceback_text)
+                friendly_text = util.get_friendly(exc_type, exc_value, tb)
+                print(friendly_text, file=sys.stderr)
+                efile.write(friendly_text)
 
             ######
             time.sleep(0.2)
             util.post_tb(tb)
         except Exception as e:
+            import rich.console
+            rich.console.Console().print_exception()
             print(f"FATAL excepthook error ({e}) ", file=sys.stderr)
             print("error when start excepthook. please report this to https://github.com/matan-h/ddebug/issues ",
                   file=sys.stderr)

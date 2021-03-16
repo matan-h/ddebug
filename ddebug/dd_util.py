@@ -1,8 +1,8 @@
 import os
 import sys
 
-import friendly_traceback
-import friendly_traceback.core
+import friendly
+import friendly.core
 
 import io
 
@@ -37,21 +37,21 @@ class Logger:
 
 
 def get_rich(exc_type, exc_value, tb):
-    from rich import Console
+    from rich.console import Console
     import rich
     from rich.traceback import Traceback
     with io.StringIO() as output:
         console = Console() or rich.get_console()
         console.file = output
-        console.print(Traceback().from_exception(exc_type, exc_value, tb))
+        console.print(Traceback.from_exception(exc_type, exc_value, tb))
         value = output.getvalue()
     return value
 
 
-def get_friendly_traceback(exc_type, exc_value, tb):
-    friendly_traceback_obj = friendly_traceback.core.FriendlyTraceback(exc_type, exc_value, tb)
-    friendly_traceback_obj.compile_info()
-    return friendly_traceback_obj.info["generic"]
+def get_friendly(exc_type, exc_value, tb):
+    friendly_obj = friendly.core.FriendlyTraceback(exc_type, exc_value, tb)
+    friendly_obj.compile_info()
+    return friendly_obj.info["generic"]
 
 
 def post_tb(tb):
