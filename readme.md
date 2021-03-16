@@ -81,7 +81,7 @@ dd.set_excepthook()
 ```
 
 Then when an error occurrs `ddebug` creates a file named `<file>-errors.txt`:
-the file starts with [stackprinter](https://github.com/cknd/stackprinter) (it shows more code context and the current values of nearby variables)
+the file starts with [rich](https://github.com/willmcgugan/rich) (render Python tracebacks with syntax highlighting and formatting)
 and then  [friendly_traceback](https://github.com/aroberge/friendly-traceback) explanation of the error.
 
 In addition, you can press Enter within the first 5 seconds after exception and it will open the standard pdb.
@@ -94,7 +94,7 @@ dd.set_atexit()
 if you want to choose file name:
 just pass `file=<file>` to the function.
 ### watch
-`ddebug` has a `watch` and `unwatch` (named also `w` and `unw`) based on [watchpoints](https://github.com/gaogaotiantian/watchpoints) (most of the changes I did were to make watchpoints more readable and add possibilty to change stream)
+`ddebug` has a `watch` and `unwatch` (named also `w` and `unw`) uses [watchpoints](https://github.com/gaogaotiantian/watchpoints).
 ```python
 from ddebug import dd
 a = []
@@ -236,6 +236,8 @@ you can config [`friendly-traceback.language`](https://aroberge.github.io/friend
 ## with dd
 `with dd` equal to [`with snoop`](https://github.com/alexmojaki/snoop#basic-snoop-usage).
 
+## inspect()
+`dd.inspect(obj)` equal to `rich.inspect`[https://github.com/willmcgugan/rich#rich-inspect]
 
 ## Dependencies
 ddebug depends on the python librarys:
@@ -244,7 +246,7 @@ ddebug depends on the python librarys:
 * [watchpoints](https://github.com/gaogaotiantian/watchpoints) - for `dd.watch` and `dd.unwatch`
 * [inputimeout](https://pypi.org/project/inputimeout) - to ask to start pdb debugger in error hooks
 * [friendly_traceback](https://github.com/aroberge/friendly-traceback) - for explanation on the error in error-hooks
-* [stackprinter](https://github.com/cknd/stackprinter) - to create the traceback before friendly-traceback in error hooks
+* [rich](https://github.com/willmcgugan/rich) - to create the traceback before friendly-traceback in error hooks and for `dd.inspect` function
 
 ## Contribute
 On all errors, problems or suggestions please open a [github issue](https://github.com/matan-h/ddebug/issues)
