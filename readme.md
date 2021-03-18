@@ -225,6 +225,15 @@ or:
 dd.add_output_folder(folder="my-cool-folder") # will create a folder my-cool-folder
 ```
 ### config
+You can [config snoop common arguments](https://github.com/alexmojaki/snoop#common-arguments) with  `dd.snoop_short_config` (named also ssc) with:
+```python
+from ddebug import dd
+dd.snoop_short_config(watch=('foo.bar', 'self.x["whatever"]'),watch_explode=['foo', 'self'])
+@dd.ssc(watch=('foo.bar', 'self.x["whatever"]'))   # you even use that as the @dd
+def foo(n):
+    return n+333
+foo(123)
+```
 You can [config snoop](https://github.com/alexmojaki/snoop#output-configuration) with:
 `dd.snoopconfig(snoop-config-options)`.
 All options but builtins and snoop names are valid.
@@ -236,8 +245,12 @@ you can config [`friendly.language`](https://aroberge.github.io/friendly-traceba
 ## with dd
 `with dd` equal to [`with snoop`](https://github.com/alexmojaki/snoop#basic-snoop-usage).
 
-## inspect()
-`dd.inspect(obj)` equal to `rich.inspect`[https://github.com/willmcgugan/rich#rich-inspect]
+## more debbug tools:
+### inspect()
+`dd.inspect(obj)` equal to [`rich.inspect`](https://github.com/willmcgugan/rich#rich-inspect)
+### deep()
+`dd.deep` equal to [`snoop.pp.deep`](https://github.com/alexmojaki/snoop#ppdeep-for-tracing-subexpressions)
+
 
 ## Dependencies
 ddebug depends on the python librarys:

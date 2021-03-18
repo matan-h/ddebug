@@ -115,14 +115,13 @@ def First(mlist):
 
 
 class ClsDebugger:
-    def __init__(self, def_name="dd"):
+    def __init__(self):
         self.w = self.watch = watch.__call__
         self.unw = self.unwatch = watch.unwatch
         self.mc = self.mincls
-        self.ssc = self.sc =self.snoop_short_config
+        self.ssc = self.snoop_short_config
         self.set_excepthook = set_excepthook
         self.set_atexit = set_atexit
-        self._def_name = def_name
         self.deep = snoop.pp.deep
         self._self_snoop = snoop.snoop()
         self.inspect = rich.inspect
@@ -151,7 +150,6 @@ class ClsDebugger:
 
         :return: see _return_args
         """
-        import re as regex
         first = First(args)
         if _from_frame is None:
             _from_frame = inspect.currentframe()
