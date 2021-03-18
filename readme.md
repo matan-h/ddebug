@@ -82,7 +82,7 @@ dd.set_excepthook()
 
 Then when an error occurrs `ddebug` creates a file named `<file>-errors.txt`:
 the file starts with [rich](https://github.com/willmcgugan/rich) (render Python tracebacks with syntax highlighting and formatting)
-and then  [friendly](https://github.com/aroberge/friendly-traceback) explanation of the error.
+and then  [friendly](https://github.com/aroberge/friendly) explanation of the error.
 
 In addition, you can press Enter within the first 5 seconds after exception and it will open the standard pdb.
 
@@ -245,7 +245,7 @@ ddebug depends on the python librarys:
 * [snoop](https://github.com/alexmojaki/snoop) - main dependency
 * [watchpoints](https://github.com/gaogaotiantian/watchpoints) - for `dd.watch` and `dd.unwatch`
 * [inputimeout](https://pypi.org/project/inputimeout) - to ask to start pdb debugger in error hooks
-* [friendly](https://github.com/aroberge/friendly-traceback) - for explanation on the error in error-hooks
+* [friendly](https://github.com/aroberge/friendly) - for explanation on the error in error-hooks
 * [rich](https://github.com/willmcgugan/rich) - to create the traceback before friendly-traceback in error hooks and for `dd.inspect` function
 
 ## Contribute

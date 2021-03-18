@@ -119,15 +119,28 @@ class ClsDebugger:
         self.w = self.watch = watch.__call__
         self.unw = self.unwatch = watch.unwatch
         self.mc = self.mincls
+        self.ssc = self.sc =self.snoop_short_config
         self.set_excepthook = set_excepthook
         self.set_atexit = set_atexit
-        self.icecream_includeContext = printer.includeContext
         self._def_name = def_name
         self.deep = snoop.pp.deep
         self._self_snoop = snoop.snoop()
         self.inspect = rich.inspect
 
-    def __call__(self, *args, from_frame=None, **kwargs):
+    def _get_call_type(self, first, frame):
+        # find @dd (like q)
+        code_context = inspect.getframeinfo(frame).code_context
+        call_type = "()"
+        if code_context:
+            code_context = code_context[0].strip()
+
+            #####################################
+            if callable(first):
+                if code_context.startswith(("def", "class")):  # @dd
+                    call_type = "@"
+        return call_type
+
+    def __call__(self, *args, call_type: str = None, _from_frame=None, **kwargs):
         """
         call when do dd()
 
@@ -140,69 +153,34 @@ class ClsDebugger:
         """
         import re as regex
         first = First(args)
-        if from_frame is None:
-            from_frame = inspect.currentframe()
-        from_frame = from_frame.f_back
-
-        # find @dd (like q)
-        code_context = inspect.getframeinfo(from_frame).code_context
-
-        if code_context:
-            code_context = code_context[0].strip()
-
-            #####################################
-            if code_context.startswith("def"):  # @dd
-                return self.process_snoop(first, args[1:], kwargs, from_par=False, isclass=False)
-
-            if code_context.startswith("class"):
-                return self.process_snoop(first, args[1:], kwargs, from_par=False, isclass=True)
-
-            if code_context.startswith(f"@{self._def_name}("):  # and code_context.endswith(")"):  # @dd()
-                return functools.partial(self.process_snoop, args=args, kwargs=kwargs, from_par=False,
-                                         isclass=inspect.isclass)
-
-                # return self.process_snoop(first,args=args, kwargs=kwargs, from_par=True, isclass=inspect.isclass(first))
-                # self._self_snoop = snoop.snoop(*args, **kwargs)
-                # return self._self_snoop
-
-            #
-
-            elif regex.findall(
-                    rf"^{util.regex_spaces}with {self._def_name}{util.regex_spaces}\(.*?\){util.regex_spaces}:",
-                    code_context):  # with dd(*args, **kwargs):
-                if args or kwargs:
-                    self._self_snoop = snoop.snoop(*args, **kwargs)
-                return self
-
-        if printer.enabled:  # and not return yet
-            printer.format_ic(from_frame, *args)
+        if _from_frame is None:
+            _from_frame = inspect.currentframe()
+        _from_frame = _from_frame.f_back
+        #
+        if call_type is None:
+            call_type = self._get_call_type(first, _from_frame)
+        #
+        if call_type == "@":
+            return self.process_snoop(first)
+        #
+        elif printer.enabled:  # and not return yet
+            printer.format_ic(_from_frame, *args)
             #
         return self._return_args(args)
 
-    def process_snoop(self, fnc, args, kwargs, from_par, isclass):
-        if callable(isclass):
-            isclass = isclass(fnc)
-        if args or kwargs:
-            self._self_snoop = snoop.snoop(*args, **kwargs)
-        #
-        if from_par:
-            if isclass:
-                return lambda cls: self.process_snoop(cls, args=args, kwargs=kwargs, from_par=False, isclass=isclass)
-                # self._self_snoop = snoop.snoop(*args, **kwargs)
-                # return functools.partial(self.process_snoop,args = args,kwargs = kwargs)
-            else:
-                return self._self_snoop
+    def snoop_short_config(self, watch=(), watch_explode=(), depth=1):
+        self._self_snoop = snoop.snoop(watch, watch_explode, depth)
+        return self
 
-        #
+    def process_snoop(self, fnc):
+        if inspect.isclass(fnc):
+            for func in inspect.getmembers(fnc, predicate=inspect.isfunction):
+                real_func = func[1]
+                #
+                setattr(fnc, func[0], self._self_snoop(real_func))
+            return fnc
         else:
-            if isclass:
-                for func in inspect.getmembers(fnc, predicate=inspect.isfunction):
-                    real_func = func[1]
-                    #
-                    setattr(fnc, func[0], self._self_snoop(real_func))
-                return fnc
-            else:
-                return self._self_snoop(fnc)
+            return self._self_snoop(fnc)
 
     @staticmethod
     def _return_args(args):
@@ -376,53 +354,61 @@ class ClsDebugger:
     def friendly_lang(self, lang):
         util.friendly.set_lang(lang)
 
+    @property
+    def icecream_includeContext(self):
+        return printer.includeContext
+
+    @icecream_includeContext.setter
+    def icecream_includeContext(self, value):
+        printer.includeContext = value
+
     def __mul__(self, other):
         """
         do dd(a) on dd*a
         """
-        return self.__call__(other, from_frame=inspect.currentframe())
+        return self.__call__(other, _from_frame=inspect.currentframe())
 
     def __matmul__(self, other):
         """
         do dd(a) on dd@a
         """
-        return self.__call__(other, from_frame=inspect.currentframe())
+        return self.__call__(other, _from_frame=inspect.currentframe())
 
     def __add__(self, other):
         """
         do dd(a) on dd+a
         """
-        return self.__call__(other, from_frame=inspect.currentframe())
+        return self.__call__(other, _from_frame=inspect.currentframe())
 
     def __lshift__(self, other):
         """
         do dd(a) on dd>>a
         """
-        return self.__call__(other, from_frame=inspect.currentframe())
+        return self.__call__(other, _from_frame=inspect.currentframe())
 
     def __rshift__(self, other):
         """
         do dd(a) on dd<<a
         """
-        return self.__call__(other, from_frame=inspect.currentframe())
+        return self.__call__(other, _from_frame=inspect.currentframe())
 
     def __ror__(self, other):
         """
         do dd(a) on a|dd
         """
-        return self.__call__(other, from_frame=inspect.currentframe())
+        return self.__call__(other, _from_frame=inspect.currentframe())
 
     def __or__(self, other):
         """
         do dd(a) on dd|a
         """
-        return self.__call__(other, from_frame=inspect.currentframe())
+        return self.__call__(other, _from_frame=inspect.currentframe())
 
     def __and__(self, other):
         """
         do dd(a) on a&d
         """
-        return self.__call__(other, from_frame=inspect.currentframe())
+        return self.__call__(other, _from_frame=inspect.currentframe())
 
     def __enter__(self, *args, **kwargs):
         self._self_snoop.__enter__(1)
