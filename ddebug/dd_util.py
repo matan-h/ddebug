@@ -70,44 +70,17 @@ def post_tb(tb):
     timeout = 5
     # i = None
     try:
+        import inputimeout
+    except (ImportError, ModuleNotFoundError) as e:
+        print(f"error when import inputimeout: ({e})", file=sys.stderr)
+        return
+    try:
 
         print(f'{timeout} seconds for press enter for start pdb debugger... > ', file=sys.stderr)
-        i = InputTimeOut(timeout=timeout).run()
-    except Exception:
+        i = inputimeout.inputimeout(timeout=timeout)
+    except (inputimeout.TimeoutOccurred, KeyboardInterrupt, EOFError):
         pass
     else:
-        if i:
-            if not (i in ("n", "no", "not")):
-                import pdb
-                pdb.post_mortem(tb)
-
-
-class InputTimeOut:
-    def __init__(self, prompt: str = '', timeout: float = 30):
-        self.prompt = prompt
-        self.timeout = timeout
-
-    def _input_process(self, stdin_fd, sq):
-        sys.stdin = os.fdopen(stdin_fd)
-        try:
-            inp = input(self.prompt)
-            sq.put(inp)
-        except Exception:
-            sq.put(None)
-
-    def run(self):
-        sq = multiprocessing.Queue()
-        p = multiprocessing.Process(target=self._input_process, args=(sys.stdin.fileno(), sq))
-        p.start()
-        t = time.time()
-        inp = None
-        while True:
-            if not sq.empty():
-                inp = sq.get()
-                break
-            if time.time() - t > self.timeout:
-                break
-        p.terminate()
-        sys.stdin = os.fdopen(sys.stdin.fileno())
-        print()
-        return inp
+        if not (i in ("n", "no", "not")):
+            import pdb
+            pdb.post_mortem(tb)

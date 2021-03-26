@@ -1,6 +1,6 @@
 icecream
 snoop
-# inputimeout
+inputimeout
 friendly
 rich
 watchpoints
