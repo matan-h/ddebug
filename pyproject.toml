@@ -26,7 +26,7 @@ icecream = "*" # main require
 watchpoints = "*" # watch require
 friendly = "*" # errors require
 rich = "*" # errors (and dd.inspect) require
-inputimeout = "*" # for post pdb require
+# inputimeout = "*" # for post pdb require
 
 [build-system]
 requires = ["poetry>=0.12"]

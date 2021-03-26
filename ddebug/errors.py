@@ -37,9 +37,7 @@ def _get_excepthook(file=None, pattern="{}-errors.txt"):
 
             ######
             time.sleep(0.2)
-            in_pycharm = 'PYCHARM_HOSTED' in os.environ
-            if not in_pycharm: # input-time-out don't work in pycharm
-                util.post_tb(tb)
+            util.post_tb(tb)
         except Exception as e:
             import rich.console
             rich.console.Console().print_exception()

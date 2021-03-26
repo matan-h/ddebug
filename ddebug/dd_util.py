@@ -1,5 +1,7 @@
+import multiprocessing
 import os
 import sys
+import time
 
 import friendly
 import friendly.core
@@ -49,34 +51,63 @@ def get_rich(exc_type, exc_value, tb):
 
 
 def get_friendly(exc_type, exc_value, tb):
-    friendly_obj = friendly.core.FriendlyTraceback(exc_type, exc_value, tb)
-    friendly_obj.compile_info()
-    return friendly_obj.info["generic"]
+    try:
+        fr = friendly.core.FriendlyTraceback(exc_type, exc_value, tb)
+        fr.compile_info()
+        generic = _rm_friendly_console(fr.info["generic"])
+        cause = _rm_friendly_console(fr.info.get("cause", str()))
+        suggest = fr.info.get("suggest", str())
+        return f"{generic}\n\n{cause}\n{suggest}"
+    except (Exception,SystemExit):
+        return 'Internal problem in Friendly.\nPlease report this issue.'
+
+
+def _rm_friendly_console(string: str):
+    return string.split("If you are using the Friendly console")[0].strip()  # you cant use "the Friendly console" in ddebug file
 
 
 def post_tb(tb):
     timeout = 5
     # i = None
     try:
-        import inputimeout
-    except (ImportError, ModuleNotFoundError) as e:
-        print(f"error when import inputimeout: ({e})", file=sys.stderr)
-        return
-    try:
 
         print(f'{timeout} seconds for press enter for start pdb debugger... > ', file=sys.stderr)
-        i = inputimeout.inputimeout(timeout=timeout)
-    except (inputimeout.TimeoutOccurred, KeyboardInterrupt, EOFError):
+        i = InputTimeOut(timeout=timeout).run()
+    except Exception:
         pass
     else:
-        if not (i in ("n", "no", "not")):
-            import pdb
-            pdb.post_mortem(tb)
+        if i:
+            if not (i in ("n", "no", "not")):
+                import pdb
+                pdb.post_mortem(tb)
 
 
-class InteractiveException(OSError):
-    def __init__(self):
-        super().__init__('Ddebug cant run in Interactive mode. (e.g. python -i).')
+class InputTimeOut:
+    def __init__(self, prompt: str = '', timeout: float = 30):
+        self.prompt = prompt
+        self.timeout = timeout
 
+    def _input_process(self, stdin_fd, sq):
+        sys.stdin = os.fdopen(stdin_fd)
+        try:
+            inp = input(self.prompt)
+            sq.put(inp)
+        except Exception:
+            sq.put(None)
 
-regex_spaces = "[ \t]*"
+    def run(self):
+        sq = multiprocessing.Queue()
+        p = multiprocessing.Process(target=self._input_process, args=(sys.stdin.fileno(), sq))
+        p.start()
+        t = time.time()
+        inp = None
+        while True:
+            if not sq.empty():
+                inp = sq.get()
+                break
+            if time.time() - t > self.timeout:
+                break
+        p.terminate()
+        sys.stdin = os.fdopen(sys.stdin.fileno())
+        print()
+        return inp
