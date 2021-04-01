@@ -57,7 +57,7 @@ In addition, you can press Enter within the first 5 seconds after exception and 
 [pdbr debugger](https://github.com/cansarigol/pdbr).
 if pdbr has a error, ddebug will start standard pdb.
 
-![ddebug traceback image](https://github.com/matan-h/ddebug/tree/master/traceback.png?raw=true)
+![ddebug traceback image](https://github.com/matan-h/ddebug/blob/master/images/traceback.png?raw=true)
 
 If you don't want\\can't use excepthook (because usually other modules use the excepthook), you can use `atexit`:
 ```python
@@ -78,7 +78,8 @@ set `ddebug_pdb=None` or delete `ddebug_pdb` to not set the input
 ## More options
 ### print stack
 ddebug has a beautiful debug tool for print stack (to see the current stack without raising an error):
-![ddebug print_stack image](https://github.com/matan-h/ddebug/tree/master/print_stack.png?raw=true)
+
+![ddebug print_stack image](https://github.com/matan-h/ddebug/blob/master/images/print_stack.png?raw=true)
 
 just do:
 ```python
@@ -146,7 +147,7 @@ foo(123)
 ### diff
 ddebug can show difference bitween two objects using [deepdiff](https://github.com/seperman/deepdiff) (ddebug also formats this using rich):
 
-![ddebug difference image](https://github.com/matan-h/ddebug/tree/master/print_stack.png?raw=true)
+![ddebug difference image](https://github.com/matan-h/ddebug/blob/master/images/diff.png?raw=true)
 
 ### min cls:
 Sometimes you don't want to view all the class functions internal processes, just see when it was called. Then you can use mincls(named also mc) option to just see the function call:
