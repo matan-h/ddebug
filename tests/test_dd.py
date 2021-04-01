@@ -215,7 +215,7 @@ class TestDD():
                 d()
 
             def d():
-                dd.print_stack(block=4)
+                dd.print_stack(block=5)
 
             a()
 
