@@ -23,10 +23,12 @@ keywords = [
 python = ">=3.6"
 snoop = "*" # main require
 icecream = "*" # main require
+rich = "*" # main require
 watchpoints = "*" # watch require
-friendly = "*" # errors require
-rich = "*" # errors (and dd.inspect) require
-inputimeout = "*" # for post pdb require
+friendly = "*" # dd-traceback errors require
+deepdiff = "*" # dd.diff require
+pdbr = "*" # post pdb require
+inputimeout = "*" # post pdb require
 
 [build-system]
 requires = ["poetry>=0.12"]

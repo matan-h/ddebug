@@ -1,8 +1,10 @@
 import atexit
+import bdb
 import builtins
 import functools
 import os
 import sys
+import time
 from typing import Iterable
 import inspect
 
@@ -12,10 +14,11 @@ import snoop.configuration as snoop_configuration
 from snoop.formatting import DefaultFormatter
 import datetime
 
-from .errors import set_excepthook, set_atexit
 from . import dd_util as util
 from .watch import watch, watch_callback
-import rich
+from . import richlib
+
+DEBUG = False
 
 
 class IceCreamDebugger(icecream.IceCreamDebugger):
@@ -78,7 +81,6 @@ class IceCreamDebugger(icecream.IceCreamDebugger):
 
     @stream.setter
     def stream(self, value):
-        # ig
         self._file = value
         if value != sys.stderr:
             self.outputFunction = self._output_txt
@@ -93,9 +95,6 @@ class IceCreamDebugger(icecream.IceCreamDebugger):
         if hasattr(self, "_file"):
             file = self._file
         print(*args, file=file)
-
-    def dd_format_frame(self, text, line, filename, code_qualname):
-        self.outputFunction(f"""File "{os.path.basename(filename)}", line {line}, in {code_qualname}\n\t{text}""")
 
 
 def set_snoop_write(output):
@@ -115,19 +114,27 @@ def First(mlist):
 
 
 class ClsDebugger:
-    def __init__(self):
+    def __init__(self, rich_color_system: richlib.Optional[
+        richlib.Literal["auto", "standard", "256", "truecolor", "windows"]
+    ] = "auto", ):
         self.w = self.watch = watch.__call__
         self.unw = self.unwatch = watch.unwatch
         self.mc = self.mincls
         self.ssc = self.snoop_short_config
-        self.set_excepthook = set_excepthook
-        self.set_atexit = set_atexit
         self.deep = snoop.pp.deep
         self._self_snoop = snoop.snoop()
-        self.inspect = rich.inspect
+        # rich
+        self._console = richlib.Console(color_system=rich_color_system)
+        self.print_exception = self._console.print_exception
+        self.pprint = self._console.pprint
+        self.inspect = self._console.inspect
+
+        self.log_error = self.except_error = self._console.logerror
+        self.log_error_function = self.except_error_function = self._console.logerror_function
+        self.diff = self._console.diff
 
     def _get_call_type(self, first, frame):
-        # find @dd (like q)
+        # find @dd
         code_context = inspect.getframeinfo(frame).code_context
         call_type = "()"
         if code_context:
@@ -139,7 +146,7 @@ class ClsDebugger:
                     call_type = "@"
         return call_type
 
-    def __call__(self, *args, call_type: str = None, _from_frame=None, **kwargs):
+    def __call__(self, *args, call_type: str = None, _from_frame=None):
         """
         call when do dd()
 
@@ -148,7 +155,7 @@ class ClsDebugger:
         if first arg is function gain @snoop
         else it do ic(args)
 
-        :return: see _return_args
+        :return: self._return_args() or snoop wrapper
         """
         first = First(args)
         if _from_frame is None:
@@ -165,10 +172,6 @@ class ClsDebugger:
             printer.format_ic(_from_frame, *args)
             #
         return self._return_args(args)
-
-    def snoop_short_config(self, watch=(), watch_explode=(), depth=1):
-        self._self_snoop = snoop.snoop(watch, watch_explode, depth)
-        return self
 
     def process_snoop(self, fnc):
         if inspect.isclass(fnc):
@@ -224,28 +227,14 @@ class ClsDebugger:
         return self
 
     # # # #
-    @staticmethod
-    def print_stack(reverse=False):
-        stack = inspect.stack()[1:]
-        #
-        q = "'{}'"
-        text = icecream.Source.executing(stack[0].frame).text()
-        printer.outputFunction(f"ddStack({q.format(text) if text else ''}):")
+    def print_stack(self, block=None, context=1):
+        stack = inspect.stack(context)[1:]
 
-        if reverse:
-            stack = reversed(stack)
-
-        for info in stack:
-
-            executing = icecream.Source.executing(info.frame)
-            text = executing.text()
-            if text:
-                printer.dd_format_frame(text, info.lineno, info.filename,
-                                        executing.code_qualname())
+        self._console.dd_format_frames(stack, block)
 
     ##
     def add_tmp_stream(self, with_print=True):
-        tmp_output_dir = (os.environ.get('TMPDIR') or os.environ.get('TEMP') or '/tmp')
+        tmp_output_dir = (os.environ.get('TMPDIR','') or os.environ.get('TEMP','') or '/tmp')
         tmp_output = os.path.join(tmp_output_dir, "ddebug.txt")
         if with_print:
             self.stream = util.Logger(open(tmp_output, "w"), self.stream)
@@ -280,6 +269,7 @@ class ClsDebugger:
         printer.stream = add_stream("icecream", sys.stderr)
         self.watch_stream = add_stream("watch", sys.stderr)
         set_snoop_write(add_stream("snoop", sys.stderr))
+        self._console.file = add_stream("rich", sys.stdout)
         if with_errors:
             efile = os.path.join(folder, "error")
             if sys.excepthook == sys.__excepthook__:  # sys.excepthook not change
@@ -288,9 +278,59 @@ class ClsDebugger:
                 self.set_atexit(file=efile, pattern="{}.txt")
         return folder
 
+    def snoop_short_config(self, watch=(), watch_explode=(), depth=1):
+        self._self_snoop = snoop.snoop(watch, watch_explode, depth)
+        return self
+
+    def set_excepthook(self, file=None, pattern="{}-errors.txt", with_file=True):
+        sys.excepthook = self._get_excepthook(file=file, pattern=pattern, with_file=with_file)
+
+    def set_atexit(self, file=None, pattern="{}-errors.txt", with_file=True):
+        def atexit_f():
+            try:
+                exctype, value, tb = sys.last_type, sys.last_value, sys.last_traceback
+            except AttributeError:  # no exception
+                return
+            else:
+                self._get_excepthook(file=file, pattern=pattern, with_file=with_file)(exctype, value, tb)
+
+        atexit.register(atexit_f)
+        return atexit_f
+
+    def _get_excepthook(self, file=None, pattern="{}-errors.txt", with_file=True):
+        if with_file:
+            if file is None:
+                file = util.getExecPath()
+            file = os.path.splitext(file)[0]  # remove ".py"
+            error_file = pattern.format(file)
+
+        def excepthook(exc_type, exc_value, tb):
+            try:
+                if isinstance(exc_type, bdb.BdbQuit):
+                    return
+                if with_file:
+                    efile = util.Logger(open(error_file, "w"), sys.stdout)
+                    atexit.register(efile.close)
+                    self._console.file = efile
+                self._console.print_exception(exc_info=[exc_type, exc_value, tb])
+            except Exception:
+                if DEBUG:
+                    import traceback
+                    traceback.print_exc()
+                #
+                print(f"FATAL excepthook error", file=sys.stderr)
+                import traceback
+                traceback.print_exc()
+                print("error when start excepthook. please report this to https://github.com/matan-h/ddebug/issues ",
+                      file=sys.stderr)
+            time.sleep(0.1)
+            util.post_tb(tb)
+
+        return excepthook
+
     @property
     def enabled(self):
-        return watch.enable or snoop.snoop.config.enabled or printer.enabled
+        return watch.enable or snoop.snoop.config.enabled or printer.enabled or (not self._console.quiet)
 
     @enabled.setter
     def enabled(self, value: bool):
@@ -298,6 +338,7 @@ class ClsDebugger:
 
         snoop.snoop.config.enabled = value
         printer.enabled = value
+        self._console.quiet = not value
 
     @property
     def stream(self):
@@ -308,6 +349,7 @@ class ClsDebugger:
         printer.stream = value
         set_snoop_write(value)
         self.watch_stream = value
+        self._console.file = value
 
     @property
     def watch_stream(self):
@@ -346,11 +388,11 @@ class ClsDebugger:
 
     @property
     def friendly_lang(self):
-        return util.friendly.get_lang()
+        return richlib.friendly.get_lang()
 
     @friendly_lang.setter
     def friendly_lang(self, lang):
-        util.friendly.set_lang(lang)
+        richlib.friendly.set_lang(lang)
 
     @property
     def icecream_includeContext(self):

@@ -1,7 +1,10 @@
-icecream
 snoop
-inputimeout
-friendly
+icecream
 rich
 watchpoints
+friendly
+deepdiff
+pdbr
+inputimeout
+
 
