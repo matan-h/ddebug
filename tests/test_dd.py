@@ -93,6 +93,15 @@ class TestDD():
             assert "{" in value
             assert "}" in value
             assert "dd.diff" in value
+        with io.StringIO() as tmp:
+            dd.stream = tmp
+            a = 60
+            b= 70
+            dd.locals()
+            value = tmp.getvalue()
+            assert "a = 60" in value
+            assert "b = 70" in value
+            assert "dd.locals" in value
 
     def test_dd_snoop(self):
         with io.StringIO() as tmp:
@@ -250,7 +259,6 @@ class TestDD():
                 assert "dd| " in dd_out
                 assert repr("X") in dd_out
                 assert "at " in dd_out
-
 
 
 if __name__ == '__main__':

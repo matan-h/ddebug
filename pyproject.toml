@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "ddebug"
-version = "0.3.0"
-description = "python library for cool debugging of python progams."
+version = "0.3.3"
+description = "python library with a set of tools for simple debugging of python programs"
 authors = ["matan h <matan.honig2@gmail.com>"]
 license = "MIT"
 

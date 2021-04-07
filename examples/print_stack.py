@@ -1,5 +1,4 @@
-import time
-from ddebug.dd_class import *
+from ddebug.dd_class import dd
 
 
 def a():
@@ -15,7 +14,9 @@ def c():
 
 
 def h():
-    dd.except_error
+    dd.print_stack()
+
+
 def main():
     a()
 

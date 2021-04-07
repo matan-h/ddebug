@@ -10,11 +10,13 @@ import rich.traceback
 import rich.pretty
 import rich.markdown
 import rich.panel
-
 import friendly.core
 from deepdiff import DeepDiff
 from contextlib import contextmanager
 import functools
+
+from rich.console import _COLOR_SYSTEMS_NAMES # noqa
+from rich.scope import render_scope
 
 try:
     from .dd_util import _rm_friendly_console
@@ -154,11 +156,11 @@ class Console(rich.console.Console):
                            max_string=max_string,
                            expand_all=expand_all)
 
-    def dd_format_frames(self, stack, block = None):
+    def dd_format_frames(self, stack, block=None):
         panels = []
         for info in stack:
             if block:
-                if stack.index(info)>=block:
+                if stack.index(info) >= block:
                     break
             executing = icecream.Source.executing(info.frame)
             text = executing.text()
@@ -168,6 +170,50 @@ class Console(rich.console.Console):
                     title=f"\"[yellow]{os.path.basename(info.filename)}\"[/]:[blue]{info.lineno}[/] in [green][b]{executing.code_qualname()}[/b][/]"))
         panel = rich.panel.Panel(rich.console.RenderGroup(*panels), title="ddStack[cyan](dd.print_stack)[/]")
         self.print(panel)
+
+    def locals(self, sort_keys=False):
+        frame = inspect.currentframe().f_back
+        line = frame.f_lineno
+        file = frame.f_code.co_filename
+        if line and file:
+            file = f"in \"{os.path.basename(file)}\":{line}"
+        else:
+            file = ''
+        #
+        if frame.f_locals:
+            self.print(render_scope(
+                frame.f_locals,
+                title=f'Local Variables (dd.locals {file}):',
+                indent_guides=True,
+                max_length=10,
+                max_string=80,
+                sort_keys=sort_keys
+            ))
+
+    # color system
+    @property
+    def color_system(self) -> Optional[str]:
+        """
+        copy of rich.console.Console.color_system
+        """
+
+        if self._color_system is not None:
+            return _COLOR_SYSTEMS_NAMES[self._color_system]
+        else:
+            return None
+
+    @color_system.setter
+    def color_system(self, value: Optional[str]):
+        if value is not None:
+            if value in _COLOR_SYSTEMS_NAMES.values():
+                index = list(_COLOR_SYSTEMS_NAMES.values()).index(value)
+                color = list(_COLOR_SYSTEMS_NAMES.keys())[index]
+                self._color_system = color
+            else:
+                s = f"{value} is not in rich color-system list.you can set color-system to one of the following:({','.join(list(_COLOR_SYSTEMS_NAMES.values()))})"
+                raise KeyError(s)
+        else:
+            self._color_system = None
 
 
 if __name__ == '__main__':

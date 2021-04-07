@@ -126,13 +126,13 @@ Watch trigger ::: File "python-file.py", line 4, in <module>
 a:was [] is now {}
 ```
 
-By default all of this output is printed with the icecream printer.
+By default all of this output is printed to `sys.stderr`.
 If you want to change this, do:
 
 ```python
 from ddebug import dd
 import sys
-dd.watch_stream = sys.stderr # or another file/stream as you want
+dd.watch_stream = sys.stdout # or another file/stream as you want
 ```
 ### snoop common arguments
 You can [config snoop common arguments](https://github.com/alexmojaki/snoop#common-arguments) with  `dd.snoop_short_config` (named also ssc) with:
@@ -166,7 +166,15 @@ Output:
 dd| python-file.py:8 in <module>: call method 'a' from class 'A' at 11:34:15.383
 ```
 mincls does not yet support the __ <> __  functions(e.g. __ init __).
-
+### locals
+ddebug can print all locals in colors by the command:
+```python
+from ddebug import dd
+a = "ddebug"
+b = "-"
+c = "locals"
+dd.locals()
+```
 ### Concatenating
 If you use ddebug as a function like icecream, e.g. `dd(value)` it will return the arguments you passed in to it:
 ```python
@@ -284,9 +292,11 @@ You can [config snoop](https://github.com/alexmojaki/snoop#output-configuration)
 `dd.snoopconfig(snoop-config-options)`.
 All options but builtins and snoop names are valid.
 
-You can config `icecream.includeContext` (dd() calls filename, line number, and parent function to dd output.) by:`dd.icecream_includeContext = True`.
+ config `icecream.includeContext` (dd() calls filename, line number, and parent function to dd output.) by:`dd.icecream_includeContext = True`.
 
-you can config [`friendly.language`](https://aroberge.github.io/friendly-traceback-docs/docs/html/usage_adv.html#language-used) by `dd.friendly_lang = "<languages>"`
+ config [`friendly.language`](https://aroberge.github.io/friendly-traceback-docs/docs/html/usage_adv.html#language-used) by `dd.friendly_lang = "<languages>"`
+
+ config [`rich color-system`](https://rich.readthedocs.io/en/stable/console.html#color-systems) by: `dd.rich_color_system = <color-system>`
 
 ## with dd
 `with dd` equal to [`with snoop`](https://github.com/alexmojaki/snoop#basic-snoop-usage).

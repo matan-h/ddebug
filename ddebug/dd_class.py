@@ -15,7 +15,7 @@ from snoop.formatting import DefaultFormatter
 import datetime
 
 from . import dd_util as util
-from .watch import watch, watch_callback
+from . import watchlib
 from . import richlib
 
 DEBUG = False
@@ -24,7 +24,7 @@ DEBUG = False
 class IceCreamDebugger(icecream.IceCreamDebugger):
     def _formatArgs(self, callFrame, callNode, prefix, context, args):
         """
-        copy of ic._formatArgs in but with operators
+        copy of ic._formatArgs but with operators
         """
         source = icecream.Source.for_frame(callFrame)
         try:
@@ -102,7 +102,6 @@ def set_snoop_write(output):
 
 
 printer = IceCreamDebugger(prefix="dd| ")
-watch_callback.printer = printer.outputFunction
 
 
 def First(mlist):
@@ -117,21 +116,26 @@ class ClsDebugger:
     def __init__(self, rich_color_system: richlib.Optional[
         richlib.Literal["auto", "standard", "256", "truecolor", "windows"]
     ] = "auto", ):
-        self.w = self.watch = watch.__call__
-        self.unw = self.unwatch = watch.unwatch
-        self.mc = self.mincls
-        self.ssc = self.snoop_short_config
-        self.deep = snoop.pp.deep
+        # snoop
         self._self_snoop = snoop.snoop()
+        self.deep = snoop.pp.deep
+        self.ssc = self.snoop_short_config
         # rich
         self._console = richlib.Console(color_system=rich_color_system)
+        # rich errors
         self.print_exception = self._console.print_exception
-        self.pprint = self._console.pprint
-        self.inspect = self._console.inspect
-
         self.log_error = self.except_error = self._console.logerror
         self.log_error_function = self.except_error_function = self._console.logerror_function
+        # rich tools
+        self.pprint = self._console.pprint
+        self.inspect = self._console.inspect
         self.diff = self._console.diff
+        self.locals = self._console.locals
+        # watch
+        self.w = self.watch = watchlib.watch.__call__
+        self.unw = self.unwatch = watchlib.watch.unwatch
+        # more
+        self.mc = self.mincls
 
     def _get_call_type(self, first, frame):
         # find @dd
@@ -234,7 +238,7 @@ class ClsDebugger:
 
     ##
     def add_tmp_stream(self, with_print=True):
-        tmp_output_dir = (os.environ.get('TMPDIR','') or os.environ.get('TEMP','') or '/tmp')
+        tmp_output_dir = (os.environ.get('TMPDIR', '') or os.environ.get('TEMP', '') or '/tmp')
         tmp_output = os.path.join(tmp_output_dir, "ddebug.txt")
         if with_print:
             self.stream = util.Logger(open(tmp_output, "w"), self.stream)
@@ -265,7 +269,6 @@ class ClsDebugger:
             atexit.register(st.close)
             return util.Logger(st, std)
 
-        # watch.set_printer(lambda x:print(x,file=add_stream("watch",sys.stderr)))
         printer.stream = add_stream("icecream", sys.stderr)
         self.watch_stream = add_stream("watch", sys.stderr)
         set_snoop_write(add_stream("snoop", sys.stderr))
@@ -330,14 +333,13 @@ class ClsDebugger:
 
     @property
     def enabled(self):
-        return watch.enable or snoop.snoop.config.enabled or printer.enabled or (not self._console.quiet)
+        return watchlib.enable or snoop.snoop.config.enabled or printer.enabled or (not self._console.quiet)
 
     @enabled.setter
     def enabled(self, value: bool):
-        watch.enable = not value
-
         snoop.snoop.config.enabled = value
         printer.enabled = value
+        watchlib.enable = value
         self._console.quiet = not value
 
     @property
@@ -353,11 +355,11 @@ class ClsDebugger:
 
     @property
     def watch_stream(self):
-        return watch_callback.file
+        return watchlib.watch.file
 
     @watch_stream.setter
     def watch_stream(self, value):
-        watch_callback.file = value
+        watchlib.watch.file = value
 
     def snoopconfig(self,
                     out=None,
@@ -401,6 +403,16 @@ class ClsDebugger:
     @icecream_includeContext.setter
     def icecream_includeContext(self, value):
         printer.includeContext = value
+
+    @property
+    def rich_color_system(self):
+        return self._console.color_system
+
+    @rich_color_system.setter
+    def rich_color_system(self, value: richlib.Optional[
+        richlib.Literal["auto", "standard", "256", "truecolor", "windows"]
+    ]):
+        self._console.color_system = value
 
     def __mul__(self, other):
         """
