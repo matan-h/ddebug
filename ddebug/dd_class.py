@@ -53,7 +53,7 @@ class IceCreamDebugger(icecream.IceCreamDebugger):
 
     def print_class_call(self, name, cls_name, callFrame):
         """
-        print class call for d.mincls
+        print class call for dd.mincls
         """
         if self.enabled:
             prefix = icecream.callOrValue(self.prefix)
@@ -101,9 +101,6 @@ def set_snoop_write(output):
     snoop.snoop.config.write = snoop_configuration.get_write_function(output=output, overwrite=False)
 
 
-printer = IceCreamDebugger(prefix="dd| ")
-
-
 def First(mlist):
     """
     :return: mlist[0] if there is
@@ -122,6 +119,7 @@ class ClsDebugger:
         self.ssc = self.snoop_short_config
         # rich
         self._console = richlib.Console(color_system=rich_color_system)
+        self._ic = IceCreamDebugger(prefix="dd| ")
         # rich errors
         self.print_exception = self._console.print_exception
         self.log_error = self.except_error = self._console.logerror
@@ -172,8 +170,8 @@ class ClsDebugger:
         if call_type == "@":
             return self.process_snoop(first)
         #
-        elif printer.enabled:  # and not return yet
-            printer.format_ic(_from_frame, *args)
+        elif self._ic.enabled:  # and not return yet
+            self._ic.format_ic(_from_frame, *args)
             #
         return self._return_args(args)
 
@@ -197,8 +195,7 @@ class ClsDebugger:
         else:
             return args
 
-    @staticmethod
-    def mincls(l):
+    def mincls(self, l):
         """
         process class for mincls function
         """
@@ -210,7 +207,7 @@ class ClsDebugger:
 
             @functools.wraps(real_func)
             def wrapper(*args, **kwargs):
-                printer.print_class_call(func[0], l.__name__, inspect.currentframe().f_back)
+                self._ic.print_class_call(func[0], l.__name__, inspect.currentframe().f_back)
                 return real_func(*args, **kwargs)
 
             setattr(l, func[0], wrapper)
@@ -269,7 +266,7 @@ class ClsDebugger:
             atexit.register(st.close)
             return util.Logger(st, std)
 
-        printer.stream = add_stream("icecream", sys.stderr)
+        self._ic.stream = add_stream("icecream", sys.stderr)
         self.watch_stream = add_stream("watch", sys.stderr)
         set_snoop_write(add_stream("snoop", sys.stderr))
         self._console.file = add_stream("rich", sys.stdout)
@@ -333,22 +330,22 @@ class ClsDebugger:
 
     @property
     def enabled(self):
-        return watchlib.enable or snoop.snoop.config.enabled or printer.enabled or (not self._console.quiet)
+        return watchlib.enable or snoop.snoop.config.enabled or self._ic.enabled or (not self._console.quiet)
 
     @enabled.setter
     def enabled(self, value: bool):
         snoop.snoop.config.enabled = value
-        printer.enabled = value
+        self._ic.enabled = value
         watchlib.enable = value
         self._console.quiet = not value
 
     @property
     def stream(self):
-        return printer.stream
+        return self._ic.stream
 
     @stream.setter
     def stream(self, value):
-        printer.stream = value
+        self._ic.stream = value
         set_snoop_write(value)
         self.watch_stream = value
         self._console.file = value
@@ -398,11 +395,11 @@ class ClsDebugger:
 
     @property
     def icecream_includeContext(self):
-        return printer.includeContext
+        return self._ic.includeContext
 
     @icecream_includeContext.setter
     def icecream_includeContext(self, value):
-        printer.includeContext = value
+        self._ic.includeContext = value
 
     @property
     def rich_color_system(self):
