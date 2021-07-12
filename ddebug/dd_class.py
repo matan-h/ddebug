@@ -387,11 +387,11 @@ class ClsDebugger:
 
     @property
     def friendly_lang(self):
-        return richlib.friendly.get_lang()
+        return richlib.friendly_traceback.get_lang()
 
     @friendly_lang.setter
     def friendly_lang(self, lang):
-        richlib.friendly.set_lang(lang)
+        richlib.friendly_traceback.set_lang(lang)
 
     @property
     def icecream_includeContext(self):

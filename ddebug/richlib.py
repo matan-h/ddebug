@@ -10,7 +10,7 @@ import rich.traceback
 import rich.pretty
 import rich.markdown
 import rich.panel
-import friendly.core
+import friendly_traceback.core
 from deepdiff import DeepDiff
 from contextlib import contextmanager
 import functools
@@ -52,7 +52,7 @@ class Console(rich.console.Console):
         return s_wrapper(show_locals) if callable(show_locals) else s_wrapper
 
     def _rich_friendly(self, exc_type, exc_value, tb):
-        fr = friendly.core.FriendlyTraceback(exc_type, exc_value, tb)
+        fr = friendly_traceback.core.FriendlyTraceback(exc_type, exc_value, tb)
         fr.compile_info()
 
         generic = _rm_friendly_console(fr.info.get("generic", ''))
