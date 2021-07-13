@@ -2,7 +2,7 @@ snoop
 icecream
 rich
 watchpoints
-friendly
+friendly-traceback
 deepdiff
 pdbr
 inputimeout

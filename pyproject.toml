@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ddebug"
-version = "0.3.4"
+version = "0.4.0"
 description = "python library with a set of tools for simple debugging of python programs"
 authors = ["matan h <matan.honig2@gmail.com>"]
 license = "MIT"
@@ -24,7 +24,7 @@ python = ">=3.6,<4.0" # the <4.0 is because rich Python requirement
 snoop = "*" # main require
 icecream = "*" # main require
 rich = "*" # main require
-friendly = "*" # dd-traceback errors require
+friendly-traceback = "*" # dd-traceback errors require
 # optional
 watchpoints = { version ="*",optional = true } # watch require
 deepdiff = { version ="*",optional = true } # dd.diff require
