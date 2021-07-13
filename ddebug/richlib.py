@@ -1,30 +1,37 @@
+"""
+rich part of ddebug (colors)
+"""
+import functools
+import inspect
 import os
 import sys
-from typing import Optional, Literal, Any, List
-import inspect
+from contextlib import contextmanager
+from typing import Any, List, Literal, Optional
 
+import friendly_traceback.core
 import icecream
 import rich
 import rich.console
-import rich.traceback
-import rich.pretty
 import rich.markdown
 import rich.panel
-import friendly_traceback.core
-from deepdiff import DeepDiff
-from contextlib import contextmanager
-import functools
-
-from rich.console import _COLOR_SYSTEMS_NAMES # noqa
+import rich.pretty
+import rich.traceback
+from rich.console import _COLOR_SYSTEMS_NAMES  # noqa
 from rich.scope import render_scope
 
+import ddebug.dd_util as util
+
 try:
-    from .dd_util import _rm_friendly_console
+    from deepdiff import DeepDiff
 except ImportError:
-    from dd_util import _rm_friendly_console
+    DeepDiff = None
 
 
 class Console(rich.console.Console):
+    """
+    class for all ddebug method that require rich.console
+    """
+
     def __init__(self, color_system: Optional[
         Literal["auto", "standard", "256", "truecolor", "windows"]
     ] = "auto", ):
@@ -55,8 +62,8 @@ class Console(rich.console.Console):
         fr = friendly_traceback.core.FriendlyTraceback(exc_type, exc_value, tb)
         fr.compile_info()
 
-        generic = _rm_friendly_console(fr.info.get("generic", ''))
-        cause = _rm_friendly_console(fr.info.get("cause", ''))
+        generic = util.rm_friendly_console(fr.info.get("generic", ''))
+        cause = util.rm_friendly_console(fr.info.get("cause", ''))
         suggest = fr.info.get("suggest", '')
         if suggest:
             suggest = "\n" + suggest
@@ -115,6 +122,8 @@ class Console(rich.console.Console):
         self.print(friendly_trace)
 
     def diff(self, obj1, obj2, **deep_diff_kws):
+        if not DeepDiff:
+            raise util.DependencyMissing("deepdiff")
         frame = inspect.currentframe().f_back
         line = frame.f_lineno
         file = frame.f_code.co_filename
@@ -221,4 +230,4 @@ if __name__ == '__main__':
     __console.diff("r", "r")
     __console.dd_format_frames(inspect.stack())
     with __console.logerror():
-        a = "a".upper2()
+        a = "a".upper2()  # noqa

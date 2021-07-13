@@ -8,7 +8,11 @@ ddebug is both
 ddebug works with python 3.6+.
 
 ## Installation
-Install using pip: ```(python -m) pip install ddebug```
+Install using pip: ```(python -m) pip install ddebug[full]```.
+
+if you want only the main dependencies (without dd.watch,dd.diff,pdbr and inputtimeout) you can install with `pip install ddebug`.
+
+if you want all but the special pdb post (pdbr and input with timeout) in excepthook you can install with `pip install ddebug[no-pdbr]`.
 
 
 ## Simple Example
@@ -74,6 +78,25 @@ you can control ddebug usage of pdbr debugger automatically with system variable
 set `ddebug_pdb=1` to set the input always to True
 set `ddebug_pdb=0` to set the input always to False
 set `ddebug_pdb=None` or delete `ddebug_pdb` to not set the input
+
+note: ddebug will ask for input only in real console (e.g. for windows: cmd.exe). and not in piped terminal (for windows:pycharm run python files)
+## Usage without Import
+modify/Create `{python_path}\sitecustomize.py` 
+
+for windows is usually: `%LocalAppData%\Programs\Python\Python38-32` or if you have python 3.9 `%LocalAppData%\Programs\Python\Python39` 
+
+for linux and macos is usually:`/usr/lib/python3.X/`  where X is your python minor version
+
+```python
+try:
+    from ddebug import dd
+except ImportError:
+    pass
+else:
+    __builtins__['dd'] = dd
+```
+and then you can just use `dd` without do `from ddebug import dd`
+
 
 ## More options
 ### print stack
