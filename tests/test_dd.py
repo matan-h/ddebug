@@ -1,15 +1,16 @@
 import io
-import pytest
-from contextlib import contextmanager
 
-from snoop import snoop
 import cheap_repr
-import inspect
+
 from ddebug import dd
+from ddebug.dd_util import ansi_escape
 
-import ddebug.dd_util
 
-class TestDD():
+def _remove_ansi(value):
+    return ansi_escape.sub('', value)
+
+
+class TestDD:
     def test_dd_ic(self):
         class A:
             def foo(self, n):
@@ -40,6 +41,7 @@ class TestDD():
             for line in tmp.getvalue().strip().split("\n"):
                 #
                 assert line.startswith("dd|"), f"line '{line}' is not start with 'dd|' \ntmp:{tmp.getvalue()}"
+                assert b == a, "dd not return the value"
             # assert (map(lambda x:x.startswith("dd |"),tmp.getvalue().split("\n")))
 
     def test_dd_enabled(self):
@@ -82,23 +84,25 @@ class TestDD():
             a = "string to inspect"
             dd.inspect(a)
             value = tmp.getvalue()
-            assert "str(object='') ->" in value
-            assert a in value
+            assert "str(object='') ->" in _remove_ansi(value)
+            assert a in _remove_ansi(value)
 
         with io.StringIO() as tmp:
             dd.stream = tmp
             dd.diff("LOGGER".split(), "LOG".split())
             value = tmp.getvalue()
+            value = _remove_ansi(value)
             assert "values_changed" in value
             assert "{" in value
             assert "}" in value
             assert "dd.diff" in value
+
         with io.StringIO() as tmp:
             dd.stream = tmp
             a = 60
-            b= 70
+            b = 70
             dd.locals()
-            value = tmp.getvalue()
+            value = _remove_ansi(tmp.getvalue())
             assert "a = 60" in value
             assert "b = 70" in value
             assert "dd.locals" in value
@@ -112,7 +116,7 @@ class TestDD():
                 pass
 
             foo()
-            value = tmp.getvalue()
+            value = _remove_ansi(tmp.getvalue())
             assert ">>> call" in value.lower()
             assert "none" in value.lower()
             assert __file__ in value
@@ -125,7 +129,7 @@ class TestDD():
                 return n + 333
 
             assert foo(123) == 456
-            value = tmp.getvalue()
+            value = _remove_ansi(tmp.getvalue())
             assert "<<< Return value from" in value
             assert value.strip().endswith("456")
         with io.StringIO() as tmp:
@@ -140,10 +144,10 @@ class TestDD():
                     return "$$$"
 
             x = X()
-            value = tmp.getvalue()
+            value = _remove_ansi(tmp.getvalue())
             assert "__init__" in value
             x.a()
-            value = tmp.getvalue()
+            value = _remove_ansi(tmp.getvalue())
             assert "a" in value
             assert "$$$" in value
 
@@ -157,7 +161,7 @@ class TestDD():
                 pass
 
             foo(a)
-            value = tmp.getvalue()
+            value = _remove_ansi(tmp.getvalue())
             assert cheap_repr.cheap_repr('hello world') in value
         with io.StringIO() as tmp:
             dd.stream = tmp
@@ -168,7 +172,7 @@ class TestDD():
 
             argv = [1, 2, "5", 6, 9]
             bar(argv)
-            value = tmp.getvalue()
+            value = _remove_ansi(tmp.getvalue())
 
             for arg in argv:
                 index = argv.index(arg)
@@ -201,10 +205,10 @@ class TestDD():
         with io.StringIO() as tmp:
             dd.stream = tmp
             try:
-                a = 1 / 0
+                a = 1 / 0  # noqa
             except Exception:
                 dd.print_exception()
-                value = tmp.getvalue()
+                value = _remove_ansi(tmp.getvalue())
                 assert "a = 1 / 0" in value
                 assert "Traceback (most recent call last)" in value
                 assert "Friendly Explanation" in value
@@ -260,6 +264,23 @@ class TestDD():
                 assert repr("X") in dd_out
                 assert "at " in dd_out
 
+    def test_dd_color(self):
+        with io.StringIO() as tmp:
+            dd.stream = tmp
+            dd.rich_color_system = "256"
+            dd.print_stack(block=3)
+            assert "\x1b" in tmp.getvalue()
+        with io.StringIO() as tmp:
+            dd.stream = tmp
+            try:
+                0 / 1
+            except Exception:
+                dd.print_exception()
+                value = tmp.getvalue()
+                assert "\x1b" in value
+
 
 if __name__ == '__main__':
+    import pytest
+
     pytest.main()

@@ -1,10 +1,15 @@
-snoop
-icecream
-rich
-watchpoints
-friendly-traceback
-deepdiff
-pdbr
-inputimeout
+snoop >= 0.3.0
+
+icecream >= 2.1.0
+rich>=10.5.0
+
+friendly-traceback>=0.3.150
+
+watchpoints>=0.1.3
 
 
+deepdiff>=5.0.0
+
+pdbr>=0.5.1
+
+inputimeout >=1.0.0
