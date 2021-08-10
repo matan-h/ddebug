@@ -177,7 +177,7 @@ class Console(rich.console.Console):
                 panels.append(rich.panel.Panel(
                     text,
                     title=f"\"[yellow]{os.path.basename(info.filename)}\"[/]:[blue]{info.lineno}[/] in [green][b]{executing.code_qualname()}[/b][/]"))
-        panel = rich.panel.Panel(rich.console.RenderGroup(*panels), title="ddStack[cyan](dd.print_stack)[/]")
+        panel = rich.panel.Panel(rich.console.Group(*panels), title="ddStack[cyan](dd.print_stack)[/]")
         self.print(panel)
 
     def locals(self, sort_keys=False):
