@@ -134,4 +134,47 @@ def _start_normal_pdb(tb):
     pdb.post_mortem(tb)
 
 
+class Exc:
+    """
+    exc for ddebug - just do `dd.exc()`,`@dd.exc` or `with dd.exc` instead of `dd.print_exception`,`dd.log_error` and `dd.log_error_function`
+    """
+
+    def __init__(self, dd_obj):
+        """
+        init the Exc class with ClsDebugger object
+
+        Args:
+            dd_obj (ClsDebugger): ClsDebugger object.
+        """
+        self.dd = dd_obj
+
+    def __call__(self, obj=None):
+        """
+        this function is called in `@dd.exc` and in `dd.exc()`
+        in `@dd.exc` it will do `@dd.except_error_function`  (functools.wraps with try/except block)
+        in `dd.exc()` it will print the exception with `dd.print_exception`
+
+        Args:
+            obj (function or None):  function if called by @
+
+        """
+        if callable(obj):
+            return self.dd.except_error_function(obj)
+        else:
+            self.dd.print_exception()
+
+    def __enter__(self):
+        """
+        Returns: the ddebug object
+        """
+        return self.dd
+
+    def __exit__(self, *exc_info):
+        """
+        print the exception
+        """
+        if all(exc_info):  # there is a error
+            self.dd.print_exception(exc_info=exc_info)
+
+
 ansi_escape = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')

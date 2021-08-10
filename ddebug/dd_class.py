@@ -106,7 +106,9 @@ class _IceCreamDebugger(icecream.IceCreamDebugger):
         print(*args, file=file)
 
 
-def set_snoop_write(output)->None:
+
+
+def set_snoop_write(output) -> None:
     """
     set snoop stream to output
     Args:
@@ -170,6 +172,10 @@ class ClsDebugger:
         """
         function wrapper for print exception if exception raises in the function
         """
+        self.exc = util.Exc(self)
+        """
+        shortcut for all `print_exception` types - can use as `print_exception`,`log_error` and `log_error_function`.
+        """
         # rich tools
         self.pprint = self._console.pprint
         """
@@ -201,6 +207,7 @@ class ClsDebugger:
         """
         shortcut for `dd.mincls`
         """
+
     @staticmethod
     def _get_call_type(first, frame: FrameType) -> str:
         """
@@ -496,6 +503,7 @@ class ClsDebugger:
 
         return excepthook
 
+
     @property
     def enabled(self) -> bool:
         """
@@ -539,7 +547,7 @@ class ClsDebugger:
     def watch_stream(self, value):
         watchlib.watch.file = value
 
-    def snoopconfig(self,*args,**kwargs):
+    def snoopconfig(self, *args, **kwargs):
         """
         config snoop by the `snoop,install` method.
         see for arguments https://github.com/alexmojaki/snoop/#output-configuration
@@ -554,7 +562,7 @@ class ClsDebugger:
         """
         snoop.install(
             builtins=False,
-            *args,**kwargs
+            *args, **kwargs
         )
         return self
 

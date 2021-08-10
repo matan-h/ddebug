@@ -81,9 +81,9 @@ set `ddebug_pdb=None` or delete `ddebug_pdb` to not set the input
 
 note: ddebug will ask for input only in real console (e.g. for windows: cmd.exe). and not in piped terminal (for windows:pycharm run python files)
 ## Usage without Import
-modify/Create `{python_path}\sitecustomize.py` 
+modify/Create `{python_path}\sitecustomize.py`
 
-for windows is usually: `%LocalAppData%\Programs\Python\Python38-32` or if you have python 3.9 `%LocalAppData%\Programs\Python\Python39` 
+for windows is usually: `%LocalAppData%\Programs\Python\Python38-32` or if you have python 3.9 `%LocalAppData%\Programs\Python\Python39`
 
 for linux and macos is usually:`/usr/lib/python3.X/`  where X is your python minor version
 
@@ -131,9 +131,12 @@ or in function:
 @dd.log_error_function # named also except_error_function
 def test():
     return 1/0
-dd.print_exception()
+test()
 ```
+#### exc
+ddebug also has shortcut that connects all of the `print_exception` shortcut named `exc`.
 
+you can use it as normal `print_exception` (by `dd.exc()`),`log_error` (by `@dd.exc`) and `log_error_function` (by `with dd.exc`)
 ### watch
 `ddebug` has a `watch` and `unwatch` (named also `w` and `unw`) using [watchpoints](https://github.com/gaogaotiantian/watchpoints).
 ```python
