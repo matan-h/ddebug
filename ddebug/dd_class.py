@@ -106,8 +106,6 @@ class _IceCreamDebugger(icecream.IceCreamDebugger):
         print(*args, file=file)
 
 
-
-
 def set_snoop_write(output) -> None:
     """
     set snoop stream to output
@@ -326,6 +324,17 @@ class ClsDebugger:
             setattr(l, func[0], wrapper)
         return l
 
+    @staticmethod
+    def breakpoint():
+        """
+        breakpoint with pdbr if its installed else with pdb
+        """
+        try:
+            import pdbr as debugger
+        except ImportError:
+            import pdb as debugger
+        debugger.set_trace()
+
     # # # # #
     def install(self, names: Iterable = ("dd",)):
         """
@@ -502,7 +511,6 @@ class ClsDebugger:
             util.post_tb(tb)
 
         return excepthook
-
 
     @property
     def enabled(self) -> bool:
