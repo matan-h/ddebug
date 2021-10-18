@@ -5,7 +5,7 @@ description = "python library with a set of tools for simple debugging of python
 authors = ["matan h <matan.honig2@gmail.com>"]
 license = "MIT"
 
-readme = "README.md"
+readme = "readme.md"
 homepage = "https://github.com/matan-h/ddebug"
 # repository = "https://github.com/matan-h/ddebug"
 # documentation = "https://github.com/matan-h/ddebug"

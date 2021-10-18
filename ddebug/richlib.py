@@ -5,8 +5,9 @@ import functools
 import inspect
 import os
 import sys
+import timeit
 from contextlib import contextmanager
-from typing import Any, List, Literal, Optional
+from typing import Any, List, Literal, Optional, Callable
 
 import friendly_traceback.core
 import icecream
@@ -198,6 +199,40 @@ class Console(rich.console.Console):
                 max_string=80,
                 sort_keys=sort_keys
             ))
+
+    def timeit(self, f: Callable = None, setup="pass", timer=timeit.default_timer,
+               number=timeit.default_number, globals_param=..., print_result=True):
+        if f is None:
+            return functools.partial(self.timeit, setup=setup, timer=timer, number=number,
+                                     globals_param=globals_param,
+                                     print_result=print_result)
+
+        @functools.wraps(f)
+        def warp(*args, **kwargs):
+            func = f
+            if args or kwargs:
+                func = functools.partial(f, *args, **kwargs)
+            _globals = globals_param
+
+            if globals_param is ...:
+                _globals = inspect.currentframe().f_back.f_globals
+
+            timeit_result = timeit.timeit(func, setup, timer, number, _globals)
+            if print_result:
+                text = "{result} - timeit on function {name} - (running {number} times)"
+
+                if self.color_system is not None:
+                    text = (text
+                            .replace("timeit", "[yellow]timeit[/]")
+                            .replace("{name}", "[cyan]{name}[/]")
+                            .replace("{number}", "[green]{number}[/]")
+                            .replace("{result}", "[blue]{result}[/]")
+                            )
+                text = text.format(result=timeit_result, name=f.__name__, number=number)
+                self.print(text)
+            return timeit_result
+
+        return warp
 
     # color system
     @property

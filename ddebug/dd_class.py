@@ -191,6 +191,7 @@ class ClsDebugger:
         """
         function for pretty print all locals with rich
         """
+        self.time = self.timeit = self._console.timeit
         # watch
         self.w = self.watch = watchlib.watch.__call__
         """

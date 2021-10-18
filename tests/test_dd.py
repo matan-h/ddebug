@@ -5,6 +5,8 @@ import cheap_repr
 from ddebug import dd
 from ddebug.dd_util import ansi_escape
 
+dd.rich_color_system = None
+
 
 def _remove_ansi(value):
     return ansi_escape.sub('', value)
@@ -278,6 +280,22 @@ class TestDD:
                 dd.print_exception()
                 value = tmp.getvalue()
                 assert "\x1b" in value
+        dd.rich_color_system = None
+
+    def test_dd_timeit(self):
+        with io.StringIO() as tmp:
+            dd.stream = tmp
+
+            @dd.timeit
+            def add(a, b):
+                a + b
+
+            n = add(123, 333)
+            assert n != 456
+            assert type(n) == float
+            value = tmp.getvalue()  # 0.0... - timeit on function add - (running 1000000 times)
+            assert "times" in value
+            assert " add " in value
 
 
 if __name__ == '__main__':
