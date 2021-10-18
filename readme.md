@@ -192,6 +192,19 @@ Output:
 dd| python-file.py:8 in <module>: call method 'a' from class 'A' at 11:34:15.383
 ```
 mincls does not yet support the __ <> __  functions(e.g. __ init __).
+### timeit
+ddebug can run function in loop and return|print the average time by the `timeit` command (named also `dd.time`):
+```python
+from ddebug import dd
+@dd.timeit()
+def f(a, b):
+    a + b
+f(2,2)
+```
+Output:
+```shell
+0.100000000 - timeit on function f - (running 1000000 times)
+```
 ### locals
 ddebug can print all locals in colors by the command:
 ```python
