@@ -68,7 +68,8 @@ class _IceCreamDebugger(icecream.IceCreamDebugger):
             callNode = executing.node
             if callNode is None:
                 self.outputFunction(
-                    f"error NoSourceAvailableError(Failed to access the underlying source code for analysis) :call method '{name}' from class '{cls_name}'")
+                    f"error NoSourceAvailableError(Failed to access the underlying source code for analysis) :call "
+                    f"method '{name}' from class '{cls_name}'")
                 return
 
             context = self._formatContext(callFrame, callNode)
@@ -90,7 +91,7 @@ class _IceCreamDebugger(icecream.IceCreamDebugger):
 
     @stream.setter
     def stream(self, value):
-        self._file = value
+        self._file = value  # noqa
         if value != sys.stderr:
             self.outputFunction = self._output_txt
         else:
@@ -232,7 +233,7 @@ class ClsDebugger:
         return call_type
 
     def __call__(self, *args, call_type: Optional[Literal["@", "()"]] = None, _from_frame=None) -> Union[
-        str, tuple, FunctionType]:
+            str, tuple, FunctionType]:
         """
         call on dd() or dd+-@ etc.
 

@@ -7,7 +7,7 @@ import os
 import sys
 import timeit
 from contextlib import contextmanager
-from typing import Any, List, Literal, Optional, Callable
+from typing import Any, List, Literal, Optional, Callable, Iterable, Union
 
 import friendly_traceback.core
 import icecream
@@ -86,18 +86,23 @@ class Console(rich.console.Console):
             theme: Optional[str] = None,
             word_wrap: bool = False,
             show_locals: bool = False,
+            suppress=(),
+            max_frames: int = 100,
             exc_info: List = None
     ) -> None:
-        """Prints a rich render of the last exception,traceback. and Friendly Explanation
+        """ Copy of console.print_exception
+        Prints a rich render of the last exception and traceback.
 
-        Args:
-            width (Optional[int], optional): Number of characters used to render code. Defaults to 88.
-            extra_lines (int, optional): Additional lines of code to render. Defaults to 3.
-            theme (str, optional): Override pygments theme used in traceback
-            word_wrap (bool, optional): Enable word wrapping of long lines. Defaults to False.
-            show_locals (bool, optional): Enable display of local variables. Defaults to False.
-            exc_info (type, value, traceback):current exception information
-        """
+                Args:
+                    width (Optional[int], optional): Number of characters used to render code. Defaults to 88.
+                    extra_lines (int, optional): Additional lines of code to render. Defaults to 3.
+                    theme (str, optional): Override pygments theme used in traceback
+                    word_wrap (bool, optional): Enable word wrapping of long lines. Defaults to False.
+                    show_locals (bool, optional): Enable display of local variables. Defaults to False.
+                    suppress (Iterable[Union[str, ModuleType]]): Optional sequence of modules or paths to exclude from traceback.
+                    max_frames (int): Maximum number of frames to show in a traceback, 0 for no maximum. Defaults to 100.
+                    exc_info (type, value, traceback):current exception exc tuple
+                """
         self.quiet = False  # print exception cant be quiet !
         if not exc_info:
             exc_info = sys.exc_info()
@@ -115,6 +120,7 @@ class Console(rich.console.Console):
             theme=theme,
             word_wrap=word_wrap,
             show_locals=show_locals,
+            suppress=suppress,
         )
         self.print(rich_trace)
 

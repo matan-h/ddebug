@@ -15,7 +15,7 @@ def _remove_ansi(value):
 class TestDD:
     def test_dd_ic(self):
         class A:
-            def foo(self, n):
+            def foo(self, n): # noqa
                 return n + 333
 
         with io.StringIO() as tmp:
