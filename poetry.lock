@@ -188,7 +188,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "snoop"
-version = "0.3.0"
+version = "0.4.0"
 description = "Powerful debugging tools for Python"
 category = "main"
 optional = false
@@ -243,7 +243,7 @@ no-pdbr = ["watchpoints"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.6,<4.0"
-content-hash = "8b72dbfb04ee78f543efa7b99b84cb16afcb4d053b51a360a608963f44de78cc"
+content-hash = "25cdb26db5d35b0eed122d486be4b7edc143289b1dd5246e351685bfdafec010"
 
 [metadata.files]
 asttokens = [
@@ -314,7 +314,7 @@ six = [
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
 snoop = [
-    {file = "snoop-0.3.0.tar.gz", hash = "sha256:db09b3f90cca8f73dbe0c26363a479d086a79aef14dd7745b42cc0ae19920ab6"},
+    {file = "snoop-0.4.0.tar.gz", hash = "sha256:b3f0903c1d1970b3852226c1d056c0d60ccea3adbb187ab8488fe423d0d4172b"},
 ]
 stack-data = [
     {file = "stack_data-0.1.1-py3-none-any.whl", hash = "sha256:83d712365a27f321fdc81f3df1f082e34496048d9675c78189b967329ec74519"},

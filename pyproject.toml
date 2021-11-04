@@ -21,7 +21,7 @@ keywords = [
 
 [tool.poetry.dependencies]
 python = ">=3.6,<4.0" # the <4.0 is because rich Python requirement
-snoop = "^0.3.0" # main require
+snoop = ">=0.3,<0.5" # main require
 icecream = "^2.1.0" # main require
 rich = "^10.5.0" # main require
 friendly-traceback = ">=0.3.150,<0.5.0" # dd-traceback errors require
