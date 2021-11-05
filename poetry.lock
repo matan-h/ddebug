@@ -109,6 +109,14 @@ optional = true
 python-versions = ">=3.4"
 
 [[package]]
+name = "objprint"
+version = "0.1.3"
+description = "A library that can print Python objects in human readable format"
+category = "main"
+optional = true
+python-versions = ">=3.6"
+
+[[package]]
 name = "ordered-set"
 version = "4.0.2"
 description = "A set that remembers its order, and allows looking up its items by their index in that order."
@@ -188,7 +196,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "snoop"
-version = "0.3.0"
+version = "0.4.0"
 description = "Powerful debugging tools for Python"
 category = "main"
 optional = false
@@ -230,11 +238,14 @@ python-versions = "*"
 
 [[package]]
 name = "watchpoints"
-version = "0.1.6"
+version = "0.2.5"
 description = "watchpoints monitors read and write on variables"
 category = "main"
 optional = true
 python-versions = ">=3.6"
+
+[package.dependencies]
+objprint = ">=0.1.3"
 
 [extras]
 full = ["watchpoints", "deepdiff", "pdbr", "inputimeout"]
@@ -243,7 +254,7 @@ no-pdbr = ["watchpoints"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.6,<4.0" # the <4.0 is because rich Python requirement
-content-hash = "1bec80f732c2d5a291f8d66d9361c505101442fc7056ef8760bc7db8f93379e8"
+content-hash = "8ac1ee24a36e81e541282e839b59f9eb6fd9c265f9c398f39e15636c609bfeff"
 
 [metadata.files]
 asttokens = [
@@ -285,6 +296,10 @@ icecream = [
 inputimeout = [
     {file = "inputimeout-1.0.4-py3-none-any.whl", hash = "sha256:f4e23d27753cfc25268eefc8d52a3edc46280ad831d226617c51882423475a43"},
 ]
+objprint = [
+    {file = "objprint-0.1.3-py3-none-any.whl", hash = "sha256:38d2f11cc6dbd40b18932c455eb91e52565fec536597f0a1ae578e6e8cfd0ab3"},
+    {file = "objprint-0.1.3.tar.gz", hash = "sha256:2961c61b9bb0f555caea69547f27a11c2d1aa6a757811c05cd09a45590beb33d"},
+]
 ordered-set = [
     {file = "ordered-set-4.0.2.tar.gz", hash = "sha256:ba93b2df055bca202116ec44b9bead3df33ea63a7d5827ff8e16738b97f33a95"},
 ]
@@ -314,7 +329,7 @@ six = [
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
 snoop = [
-    {file = "snoop-0.3.0.tar.gz", hash = "sha256:db09b3f90cca8f73dbe0c26363a479d086a79aef14dd7745b42cc0ae19920ab6"},
+    {file = "snoop-0.4.0.tar.gz", hash = "sha256:b3f0903c1d1970b3852226c1d056c0d60ccea3adbb187ab8488fe423d0d4172b"},
 ]
 stack-data = [
     {file = "stack_data-0.1.1-py3-none-any.whl", hash = "sha256:83d712365a27f321fdc81f3df1f082e34496048d9675c78189b967329ec74519"},
@@ -325,6 +340,6 @@ typing-extensions = [
     {file = "typing_extensions-3.10.0.2.tar.gz", hash = "sha256:49f75d16ff11f1cd258e1b988ccff82a3ca5570217d7ad8c5f48205dd99a677e"},
 ]
 watchpoints = [
-    {file = "watchpoints-0.1.6-py3-none-any.whl", hash = "sha256:2fd026da48b672968bc95c4915a75fc9fb4091c5c3b67ca28656b8a3538bef21"},
-    {file = "watchpoints-0.1.6.tar.gz", hash = "sha256:bb2a29775e17a318bf71a5889fafa52ca55323277b40de5f848af4908323aa8a"},
+    {file = "watchpoints-0.2.5-py3-none-any.whl", hash = "sha256:4c5b9e94b281939c66183579f8c1b7900caf6cd16a10a95d3646814f12bad8d5"},
+    {file = "watchpoints-0.2.5.tar.gz", hash = "sha256:779aac67aa7263b1ec110b4eee1abafbd49ad14aaa52c64e1e0867b62b35383c"},
 ]

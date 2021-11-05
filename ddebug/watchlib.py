@@ -44,6 +44,7 @@ if watchpoints:
 
 
     # replace `WatchPrint` by `WatchCallBack`.
+    # watchpoints.watch.config() # TODO
     importlib.import_module("watchpoints.watch").WatchPrint = WatchCallBack
     watch = watchpoints.watch
 else:
