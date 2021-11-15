@@ -196,7 +196,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "snoop"
-version = "0.4.0"
+version = "0.4.1"
 description = "Powerful debugging tools for Python"
 category = "main"
 optional = false
@@ -204,13 +204,13 @@ python-versions = "*"
 
 [package.dependencies]
 asttokens = "*"
-cheap_repr = ">=0.4.0"
+cheap-repr = ">=0.4.0"
 executing = "*"
 pygments = "*"
 six = "*"
 
 [package.extras]
-tests = ["pytest", "littleutils", "prettyprinter", "pprintpp", "numpy (>=1.16.5)", "pandas (>=0.24.2)", "birdseye", "django"]
+tests = ["pytest", "littleutils", "prettyprinter", "pprintpp", "pandas (>=0.24.2)", "numpy (>=1.16.5)", "birdseye", "pytest-order (<=0.11.0)", "django", "pytest-order"]
 
 [[package]]
 name = "stack-data"
@@ -253,7 +253,7 @@ no-pdbr = ["watchpoints"]
 
 [metadata]
 lock-version = "1.1"
-python-versions = ">=3.6,<4.0" # the <4.0 is because rich Python requirement
+python-versions = ">=3.6,<4.0"
 content-hash = "8ac1ee24a36e81e541282e839b59f9eb6fd9c265f9c398f39e15636c609bfeff"
 
 [metadata.files]
@@ -329,7 +329,8 @@ six = [
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
 snoop = [
-    {file = "snoop-0.4.0.tar.gz", hash = "sha256:b3f0903c1d1970b3852226c1d056c0d60ccea3adbb187ab8488fe423d0d4172b"},
+    {file = "snoop-0.4.1-py2.py3-none-any.whl", hash = "sha256:8612b5c3fdfe6ebb28502f38111d552cbba4a7092db80d5924e5492decd6b4ec"},
+    {file = "snoop-0.4.1.tar.gz", hash = "sha256:425bcc620fa77d70cd9e3f82d1c2191966956949374c0eb23dae4ed110dad9cd"},
 ]
 stack-data = [
     {file = "stack_data-0.1.1-py3-none-any.whl", hash = "sha256:83d712365a27f321fdc81f3df1f082e34496048d9675c78189b967329ec74519"},
