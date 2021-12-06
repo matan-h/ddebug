@@ -74,7 +74,7 @@ python-versions = "*"
 
 [[package]]
 name = "friendly-traceback"
-version = "0.3.166"
+version = "0.4.89"
 description = "Friendlier tracebacks in any language."
 category = "main"
 optional = false
@@ -84,7 +84,7 @@ python-versions = ">=3.6"
 asttokens = ">=2.0.4"
 executing = ">=0.7.0"
 pure-eval = ">=0.2.1"
-stack-data = ">=0.1.0"
+stack-data = ">=0.1.3"
 
 [[package]]
 name = "icecream"
@@ -214,7 +214,7 @@ tests = ["pytest", "littleutils", "prettyprinter", "pprintpp", "numpy (>=1.16.5)
 
 [[package]]
 name = "stack-data"
-version = "0.1.1"
+version = "0.1.3"
 description = "Extract data from python stack frames and tracebacks for informative displays"
 category = "main"
 optional = false
@@ -226,7 +226,7 @@ executing = "*"
 pure-eval = "*"
 
 [package.extras]
-tests = ["pytest", "typeguard", "pygments", "pep517", "littleutils"]
+tests = ["pytest", "typeguard", "pygments", "littleutils"]
 
 [[package]]
 name = "typing-extensions"
@@ -253,8 +253,8 @@ no-pdbr = ["watchpoints"]
 
 [metadata]
 lock-version = "1.1"
-python-versions = ">=3.6,<4.0" # the <4.0 is because rich Python requirement
-content-hash = "8ac1ee24a36e81e541282e839b59f9eb6fd9c265f9c398f39e15636c609bfeff"
+python-versions = ">=3.6,<4.0"
+content-hash = "8c3d7b74a84c996ae204f5b2037e6de62b482b54b60d602dac641bc7201d1d2e"
 
 [metadata.files]
 asttokens = [
@@ -286,8 +286,8 @@ executing = [
     {file = "executing-0.8.2.tar.gz", hash = "sha256:c23bf42e9a7b9b212f185b1b2c3c91feb895963378887bb10e64a2e612ec0023"},
 ]
 friendly-traceback = [
-    {file = "friendly_traceback-0.3.166-py3-none-any.whl", hash = "sha256:b62f0e59910d23fa46a3daae17d9e61d617db8dadf519ecf51f7ce377b256843"},
-    {file = "friendly_traceback-0.3.166.tar.gz", hash = "sha256:03c46d3532a4f37b0cc20f68836d36ac0d04675dfabf3f49366a664a59ea1193"},
+    {file = "friendly-traceback-0.4.89.tar.gz", hash = "sha256:788943116a49e00508108d073fc0a16aa2488c4ff6d0d275aa4b4745f9ab6eaa"},
+    {file = "friendly_traceback-0.4.89-py3-none-any.whl", hash = "sha256:d88c6c04bf6a827fa2dd4d72a1cd21d64aa082d49dd31048392e05d280b9f15b"},
 ]
 icecream = [
     {file = "icecream-2.1.1-py2.py3-none-any.whl", hash = "sha256:adc1c48f5a4f83b2171c774a35142f217d317a84fca8cdf3fc65aa1321ff26b6"},
@@ -332,7 +332,8 @@ snoop = [
     {file = "snoop-0.4.0.tar.gz", hash = "sha256:b3f0903c1d1970b3852226c1d056c0d60ccea3adbb187ab8488fe423d0d4172b"},
 ]
 stack-data = [
-    {file = "stack_data-0.1.1-py3-none-any.whl", hash = "sha256:83d712365a27f321fdc81f3df1f082e34496048d9675c78189b967329ec74519"},
+    {file = "stack_data-0.1.3-py3-none-any.whl", hash = "sha256:e3f4e54cde03af62e9afd680b3407d38f2e4f3d0e23c3d53371c088c9bea299d"},
+    {file = "stack_data-0.1.3.tar.gz", hash = "sha256:5cb2aff8164a81901160078ea2f5e39de978f08c96ac69e552a5c5345f892a81"},
 ]
 typing-extensions = [
     {file = "typing_extensions-3.10.0.2-py2-none-any.whl", hash = "sha256:d8226d10bc02a29bcc81df19a26e56a9647f8b0a6d4a83924139f4a8b01f17b7"},
