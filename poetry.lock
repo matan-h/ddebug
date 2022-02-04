@@ -43,14 +43,6 @@ python-versions = "*"
 test = ["flake8 (==3.7.8)", "hypothesis (==3.55.3)"]
 
 [[package]]
-name = "dataclasses"
-version = "0.8"
-description = "A backport of the dataclasses module for Python 3.6"
-category = "main"
-optional = false
-python-versions = ">=3.6, <3.7"
-
-[[package]]
 name = "deepdiff"
 version = "5.7.0"
 description = "Deep Difference and Search of any Python object/data."
@@ -74,7 +66,7 @@ python-versions = "*"
 
 [[package]]
 name = "friendly-traceback"
-version = "0.5.1"
+version = "0.5.23"
 description = "Friendlier tracebacks in any language."
 category = "main"
 optional = false
@@ -126,24 +118,25 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "pdbr"
-version = "0.5.6"
+version = "0.6.9"
 description = "Pdb with Rich library."
 category = "main"
 optional = true
-python-versions = ">=3.6,<4.0"
+python-versions = ">=3.7.12,<4.0.0"
 
 [package.dependencies]
 icecream = ">=2.1.0,<3.0.0"
-pyreadline = ">=2.1,<3.0"
+pyreadline = {version = ">=2.1,<3.0", markers = "sys_platform == \"win32\""}
 rich = ">=10.0.0,<11.0.0"
+sqlparse = ">=0.4.2,<0.5.0"
 
 [package.extras]
-celery = ["celery (>=4.4.7,<5.0.0)"]
-ipython = ["ipython (==7.16)", "jedi (==0.17.2)"]
+celery = ["celery (>=5.2.2,<6.0.0)"]
+ipython = ["ipython (>=7.7,<8.0)"]
 
 [[package]]
 name = "pure-eval"
-version = "0.2.1"
+version = "0.2.2"
 description = "Safely evaluate AST nodes without side effects"
 category = "main"
 optional = false
@@ -154,7 +147,7 @@ tests = ["pytest"]
 
 [[package]]
 name = "pygments"
-version = "2.10.0"
+version = "2.11.2"
 description = "Pygments is a syntax highlighting package written in Python."
 category = "main"
 optional = false
@@ -170,18 +163,17 @@ python-versions = "*"
 
 [[package]]
 name = "rich"
-version = "10.11.0"
+version = "10.16.2"
 description = "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal"
 category = "main"
 optional = false
-python-versions = ">=3.6,<4.0"
+python-versions = ">=3.6.2,<4.0.0"
 
 [package.dependencies]
 colorama = ">=0.4.0,<0.5.0"
 commonmark = ">=0.9.0,<0.10.0"
-dataclasses = {version = ">=0.7,<0.9", markers = "python_version >= \"3.6\" and python_version < \"3.7\""}
 pygments = ">=2.6.0,<3.0.0"
-typing-extensions = {version = ">=3.7.4,<4.0.0", markers = "python_version < \"3.8\""}
+typing-extensions = {version = ">=3.7.4,<5.0", markers = "python_version < \"3.8\""}
 
 [package.extras]
 jupyter = ["ipywidgets (>=7.5.1,<8.0.0)"]
@@ -213,8 +205,16 @@ six = "*"
 tests = ["pytest", "littleutils", "prettyprinter", "pprintpp", "pandas (>=0.24.2)", "numpy (>=1.16.5)", "birdseye", "pytest-order (<=0.11.0)", "django", "pytest-order"]
 
 [[package]]
+name = "sqlparse"
+version = "0.4.2"
+description = "A non-validating SQL parser."
+category = "main"
+optional = true
+python-versions = ">=3.5"
+
+[[package]]
 name = "stack-data"
-version = "0.1.3"
+version = "0.1.4"
 description = "Extract data from python stack frames and tracebacks for informative displays"
 category = "main"
 optional = false
@@ -230,11 +230,11 @@ tests = ["pytest", "typeguard", "pygments", "littleutils"]
 
 [[package]]
 name = "typing-extensions"
-version = "3.10.0.2"
-description = "Backported and Experimental Type Hints for Python 3.5+"
+version = "4.0.1"
+description = "Backported and Experimental Type Hints for Python 3.6+"
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.6"
 
 [[package]]
 name = "watchpoints"
@@ -253,8 +253,8 @@ no-pdbr = ["watchpoints"]
 
 [metadata]
 lock-version = "1.1"
-python-versions = ">=3.6,<4.0"
-content-hash = "64660487a61c1d0ced8a23a591e0833ffa3b2ce8e9c607c8b7013cb00cfd2011"
+python-versions = ">=3.7.12,<4.0" # the <4.0 is because rich Python requirement
+content-hash = "f6b43fd843b913279c8bfaa9bf5b1792a23f2b70ec3dfc89fc5ea0645aa6643e"
 
 [metadata.files]
 asttokens = [
@@ -273,10 +273,6 @@ commonmark = [
     {file = "commonmark-0.9.1-py2.py3-none-any.whl", hash = "sha256:da2f38c92590f83de410ba1a3cbceafbc74fee9def35f9251ba9a971d6d66fd9"},
     {file = "commonmark-0.9.1.tar.gz", hash = "sha256:452f9dc859be7f06631ddcb328b6919c67984aca654e5fefb3914d54691aed60"},
 ]
-dataclasses = [
-    {file = "dataclasses-0.8-py3-none-any.whl", hash = "sha256:0201d89fa866f68c8ebd9d08ee6ff50c0b255f8ec63a71c16fda7af82bb887bf"},
-    {file = "dataclasses-0.8.tar.gz", hash = "sha256:8479067f342acf957dc82ec415d355ab5edb7e7646b90dc6e2fd1d96ad084c97"},
-]
 deepdiff = [
     {file = "deepdiff-5.7.0-py3-none-any.whl", hash = "sha256:1ffb38c3b5d9174eb2df95850c93aee55ec00e19396925036a2e680f725079e0"},
     {file = "deepdiff-5.7.0.tar.gz", hash = "sha256:838766484e323dcd9dec6955926a893a83767dc3f3f94542773e6aa096efe5d4"},
@@ -286,8 +282,8 @@ executing = [
     {file = "executing-0.8.2.tar.gz", hash = "sha256:c23bf42e9a7b9b212f185b1b2c3c91feb895963378887bb10e64a2e612ec0023"},
 ]
 friendly-traceback = [
-    {file = "friendly-traceback-0.5.1.tar.gz", hash = "sha256:5387db1061d7cbed509373494286d02a98da7075acbf8ca9defd5adcdb352f88"},
-    {file = "friendly_traceback-0.5.1-py3-none-any.whl", hash = "sha256:164f33bd24a4777a81b495dd40dd3f67c9f3faa07b992f8e755de375f032b7b6"},
+    {file = "friendly-traceback-0.5.23.tar.gz", hash = "sha256:4353e315566d6952013c85b1f09553c5b6f87bcf646c163971d5610b1b262fb6"},
+    {file = "friendly_traceback-0.5.23-py3-none-any.whl", hash = "sha256:355aaebc8fe8d2a274428a3088ca63f88f70334be2a209f7c145ac0a0b7b40c2"},
 ]
 icecream = [
     {file = "icecream-2.1.1-py2.py3-none-any.whl", hash = "sha256:adc1c48f5a4f83b2171c774a35142f217d317a84fca8cdf3fc65aa1321ff26b6"},
@@ -304,16 +300,16 @@ ordered-set = [
     {file = "ordered-set-4.0.2.tar.gz", hash = "sha256:ba93b2df055bca202116ec44b9bead3df33ea63a7d5827ff8e16738b97f33a95"},
 ]
 pdbr = [
-    {file = "pdbr-0.5.6-py3-none-any.whl", hash = "sha256:8fcf71ed4f5ec1f5f7e4b38f20ce1d48851a2816ac5b84478fd2c9fdc7f0850e"},
-    {file = "pdbr-0.5.6.tar.gz", hash = "sha256:06724a646ce6b4e74d99e08a82648006596f19b6e769148b8ed58538e176c3f0"},
+    {file = "pdbr-0.6.9-py3-none-any.whl", hash = "sha256:97fee68ddd2ce3c516b3132b3de905c096b3f27717f8f364758d9f93756e9fcf"},
+    {file = "pdbr-0.6.9.tar.gz", hash = "sha256:4e6af027106013c4f016afa4207d0033f345c40053f81de51c660fc10c536495"},
 ]
 pure-eval = [
-    {file = "pure_eval-0.2.1-py3-none-any.whl", hash = "sha256:94eeb505a88721bec7bb21a4ac49758b8b1a01530da1a70d4ffc1d9937689d71"},
-    {file = "pure_eval-0.2.1.tar.gz", hash = "sha256:0f04483b16c9429532d2c0ddc96e2b3bb6b2dc37a2bfb0e986248dbfd0b78873"},
+    {file = "pure_eval-0.2.2-py3-none-any.whl", hash = "sha256:01eaab343580944bc56080ebe0a674b39ec44a945e6d09ba7db3cb8cec289350"},
+    {file = "pure_eval-0.2.2.tar.gz", hash = "sha256:2b45320af6dfaa1750f543d714b6d1c520a1688dec6fd24d339063ce0aaa9ac3"},
 ]
 pygments = [
-    {file = "Pygments-2.10.0-py3-none-any.whl", hash = "sha256:b8e67fe6af78f492b3c4b3e2970c0624cbf08beb1e493b2c99b9fa1b67a20380"},
-    {file = "Pygments-2.10.0.tar.gz", hash = "sha256:f398865f7eb6874156579fdf36bc840a03cab64d1cde9e93d68f46a425ec52c6"},
+    {file = "Pygments-2.11.2-py3-none-any.whl", hash = "sha256:44238f1b60a76d78fc8ca0528ee429702aae011c265fe6a8dd8b63049ae41c65"},
+    {file = "Pygments-2.11.2.tar.gz", hash = "sha256:4e426f72023d88d03b2fa258de560726ce890ff3b630f88c21cbb8b2503b8c6a"},
 ]
 pyreadline = [
     {file = "pyreadline-2.1.win-amd64.exe", hash = "sha256:9ce5fa65b8992dfa373bddc5b6e0864ead8f291c94fbfec05fbd5c836162e67b"},
@@ -321,8 +317,8 @@ pyreadline = [
     {file = "pyreadline-2.1.zip", hash = "sha256:4530592fc2e85b25b1a9f79664433da09237c1a270e4d78ea5aa3a2c7229e2d1"},
 ]
 rich = [
-    {file = "rich-10.11.0-py3-none-any.whl", hash = "sha256:44bb3f9553d00b3c8938abf89828df870322b9ba43caf3b12bb7758debdc6dec"},
-    {file = "rich-10.11.0.tar.gz", hash = "sha256:016fa105f34b69c434e7f908bb5bd7fefa9616efdb218a2917117683a6394ce5"},
+    {file = "rich-10.16.2-py3-none-any.whl", hash = "sha256:c59d73bd804c90f747c8d7b1d023b88f2a9ac2454224a4aeaf959b21eeb42d03"},
+    {file = "rich-10.16.2.tar.gz", hash = "sha256:720974689960e06c2efdb54327f8bf0cdbdf4eae4ad73b6c94213cad405c371b"},
 ]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
@@ -332,14 +328,17 @@ snoop = [
     {file = "snoop-0.4.1-py2.py3-none-any.whl", hash = "sha256:8612b5c3fdfe6ebb28502f38111d552cbba4a7092db80d5924e5492decd6b4ec"},
     {file = "snoop-0.4.1.tar.gz", hash = "sha256:425bcc620fa77d70cd9e3f82d1c2191966956949374c0eb23dae4ed110dad9cd"},
 ]
+sqlparse = [
+    {file = "sqlparse-0.4.2-py3-none-any.whl", hash = "sha256:48719e356bb8b42991bdbb1e8b83223757b93789c00910a616a071910ca4a64d"},
+    {file = "sqlparse-0.4.2.tar.gz", hash = "sha256:0c00730c74263a94e5a9919ade150dfc3b19c574389985446148402998287dae"},
+]
 stack-data = [
-    {file = "stack_data-0.1.3-py3-none-any.whl", hash = "sha256:e3f4e54cde03af62e9afd680b3407d38f2e4f3d0e23c3d53371c088c9bea299d"},
-    {file = "stack_data-0.1.3.tar.gz", hash = "sha256:5cb2aff8164a81901160078ea2f5e39de978f08c96ac69e552a5c5345f892a81"},
+    {file = "stack_data-0.1.4-py3-none-any.whl", hash = "sha256:02cc0683cbc445ae4ca8c4e3a0e58cb1df59f252efb0aa016b34804a707cf9bc"},
+    {file = "stack_data-0.1.4.tar.gz", hash = "sha256:7769ed2482ce0030e00175dd1bf4ef1e873603b6ab61cd3da443b410e64e9477"},
 ]
 typing-extensions = [
-    {file = "typing_extensions-3.10.0.2-py2-none-any.whl", hash = "sha256:d8226d10bc02a29bcc81df19a26e56a9647f8b0a6d4a83924139f4a8b01f17b7"},
-    {file = "typing_extensions-3.10.0.2-py3-none-any.whl", hash = "sha256:f1d25edafde516b146ecd0613dabcc61409817af4766fbbcfb8d1ad4ec441a34"},
-    {file = "typing_extensions-3.10.0.2.tar.gz", hash = "sha256:49f75d16ff11f1cd258e1b988ccff82a3ca5570217d7ad8c5f48205dd99a677e"},
+    {file = "typing_extensions-4.0.1-py3-none-any.whl", hash = "sha256:7f001e5ac290a0c0401508864c7ec868be4e701886d5b573a9528ed3973d9d3b"},
+    {file = "typing_extensions-4.0.1.tar.gz", hash = "sha256:4ca091dea149f945ec56afb48dae714f21e8692ef22a395223bcd328961b6a0e"},
 ]
 watchpoints = [
     {file = "watchpoints-0.2.5-py3-none-any.whl", hash = "sha256:4c5b9e94b281939c66183579f8c1b7900caf6cd16a10a95d3646814f12bad8d5"},
