@@ -66,7 +66,7 @@ python-versions = "*"
 
 [[package]]
 name = "friendly-traceback"
-version = "0.5.23"
+version = "0.5.32"
 description = "Friendlier tracebacks in any language."
 category = "main"
 optional = false
@@ -253,7 +253,7 @@ no-pdbr = ["watchpoints"]
 
 [metadata]
 lock-version = "1.1"
-python-versions = ">=3.7.12,<4.0" # the <4.0 is because rich Python requirement
+python-versions = ">=3.7.12,<4.0"
 content-hash = "f6b43fd843b913279c8bfaa9bf5b1792a23f2b70ec3dfc89fc5ea0645aa6643e"
 
 [metadata.files]
@@ -282,8 +282,8 @@ executing = [
     {file = "executing-0.8.2.tar.gz", hash = "sha256:c23bf42e9a7b9b212f185b1b2c3c91feb895963378887bb10e64a2e612ec0023"},
 ]
 friendly-traceback = [
-    {file = "friendly-traceback-0.5.23.tar.gz", hash = "sha256:4353e315566d6952013c85b1f09553c5b6f87bcf646c163971d5610b1b262fb6"},
-    {file = "friendly_traceback-0.5.23-py3-none-any.whl", hash = "sha256:355aaebc8fe8d2a274428a3088ca63f88f70334be2a209f7c145ac0a0b7b40c2"},
+    {file = "friendly-traceback-0.5.32.tar.gz", hash = "sha256:cf4a69656e7c025342f969f12d981f0deefba699036ba6fc118e1a640c6d972d"},
+    {file = "friendly_traceback-0.5.32-py3-none-any.whl", hash = "sha256:789f023169e567c75ff529593d8ee80418dd7e2866763c026f302d4bd1032ec9"},
 ]
 icecream = [
     {file = "icecream-2.1.1-py2.py3-none-any.whl", hash = "sha256:adc1c48f5a4f83b2171c774a35142f217d317a84fca8cdf3fc65aa1321ff26b6"},
