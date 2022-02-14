@@ -66,7 +66,7 @@ python-versions = "*"
 
 [[package]]
 name = "friendly-traceback"
-version = "0.5.23"
+version = "0.5.35"
 description = "Friendlier tracebacks in any language."
 category = "main"
 optional = false
@@ -76,7 +76,7 @@ python-versions = ">=3.6"
 asttokens = ">=2.0.4"
 executing = ">=0.7.0"
 pure-eval = ">=0.2.1"
-stack-data = ">=0.1.3"
+stack-data = ">=0.2.0"
 
 [[package]]
 name = "icecream"
@@ -214,7 +214,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "stack-data"
-version = "0.1.4"
+version = "0.2.0"
 description = "Extract data from python stack frames and tracebacks for informative displays"
 category = "main"
 optional = false
@@ -226,7 +226,7 @@ executing = "*"
 pure-eval = "*"
 
 [package.extras]
-tests = ["pytest", "typeguard", "pygments", "littleutils"]
+tests = ["pytest", "typeguard", "pygments", "littleutils", "cython"]
 
 [[package]]
 name = "typing-extensions"
@@ -253,7 +253,7 @@ no-pdbr = ["watchpoints"]
 
 [metadata]
 lock-version = "1.1"
-python-versions = ">=3.7.12,<4.0" # the <4.0 is because rich Python requirement
+python-versions = ">=3.7.12,<4.0"
 content-hash = "f6b43fd843b913279c8bfaa9bf5b1792a23f2b70ec3dfc89fc5ea0645aa6643e"
 
 [metadata.files]
@@ -282,8 +282,8 @@ executing = [
     {file = "executing-0.8.2.tar.gz", hash = "sha256:c23bf42e9a7b9b212f185b1b2c3c91feb895963378887bb10e64a2e612ec0023"},
 ]
 friendly-traceback = [
-    {file = "friendly-traceback-0.5.23.tar.gz", hash = "sha256:4353e315566d6952013c85b1f09553c5b6f87bcf646c163971d5610b1b262fb6"},
-    {file = "friendly_traceback-0.5.23-py3-none-any.whl", hash = "sha256:355aaebc8fe8d2a274428a3088ca63f88f70334be2a209f7c145ac0a0b7b40c2"},
+    {file = "friendly-traceback-0.5.35.tar.gz", hash = "sha256:3e93c27f7bbd97520930a079b54263e1b213371a49890a15d78fc4cbc2d17cf9"},
+    {file = "friendly_traceback-0.5.35-py3-none-any.whl", hash = "sha256:2698d5e6e29d267e9bd2dd1a2899b570a8f41f5357d9014cd919777dc0e1c561"},
 ]
 icecream = [
     {file = "icecream-2.1.1-py2.py3-none-any.whl", hash = "sha256:adc1c48f5a4f83b2171c774a35142f217d317a84fca8cdf3fc65aa1321ff26b6"},
@@ -333,8 +333,8 @@ sqlparse = [
     {file = "sqlparse-0.4.2.tar.gz", hash = "sha256:0c00730c74263a94e5a9919ade150dfc3b19c574389985446148402998287dae"},
 ]
 stack-data = [
-    {file = "stack_data-0.1.4-py3-none-any.whl", hash = "sha256:02cc0683cbc445ae4ca8c4e3a0e58cb1df59f252efb0aa016b34804a707cf9bc"},
-    {file = "stack_data-0.1.4.tar.gz", hash = "sha256:7769ed2482ce0030e00175dd1bf4ef1e873603b6ab61cd3da443b410e64e9477"},
+    {file = "stack_data-0.2.0-py3-none-any.whl", hash = "sha256:999762f9c3132308789affa03e9271bbbe947bf78311851f4d485d8402ed858e"},
+    {file = "stack_data-0.2.0.tar.gz", hash = "sha256:45692d41bd633a9503a5195552df22b583caf16f0b27c4e58c98d88c8b648e12"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.0.1-py3-none-any.whl", hash = "sha256:7f001e5ac290a0c0401508864c7ec868be4e701886d5b573a9528ed3973d9d3b"},
