@@ -80,7 +80,7 @@ stack-data = ">=0.1.3"
 
 [[package]]
 name = "icecream"
-version = "2.1.1"
+version = "2.1.2"
 description = "Never use print() to debug again; inspect variables, expressions, and program execution with a single, simple function call."
 category = "main"
 optional = false
@@ -253,7 +253,7 @@ no-pdbr = ["watchpoints"]
 
 [metadata]
 lock-version = "1.1"
-python-versions = ">=3.7.12,<4.0" # the <4.0 is because rich Python requirement
+python-versions = ">=3.7.12,<4.0"
 content-hash = "f6b43fd843b913279c8bfaa9bf5b1792a23f2b70ec3dfc89fc5ea0645aa6643e"
 
 [metadata.files]
@@ -286,8 +286,8 @@ friendly-traceback = [
     {file = "friendly_traceback-0.5.23-py3-none-any.whl", hash = "sha256:355aaebc8fe8d2a274428a3088ca63f88f70334be2a209f7c145ac0a0b7b40c2"},
 ]
 icecream = [
-    {file = "icecream-2.1.1-py2.py3-none-any.whl", hash = "sha256:adc1c48f5a4f83b2171c774a35142f217d317a84fca8cdf3fc65aa1321ff26b6"},
-    {file = "icecream-2.1.1.tar.gz", hash = "sha256:47e00e3f4e8477996e7dc420b6fa8ba53f8ced17de65320fedb5b15997b76589"},
+    {file = "icecream-2.1.2-py2.py3-none-any.whl", hash = "sha256:04b9cea4d9931cf6960db0430ebf11fa34464ce7152e384ddf50f96d25b201b4"},
+    {file = "icecream-2.1.2.tar.gz", hash = "sha256:09300b2d1c678712410cbd47c95198eb1b580f66f311a554ccd6b9e758ece0ee"},
 ]
 inputimeout = [
     {file = "inputimeout-1.0.4-py3-none-any.whl", hash = "sha256:f4e23d27753cfc25268eefc8d52a3edc46280ad831d226617c51882423475a43"},
