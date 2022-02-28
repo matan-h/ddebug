@@ -28,7 +28,7 @@ friendly-traceback = ">=0.4.70,<0.6.0" # dd-traceback errors require
 # optional
 watchpoints = { version =">=0.2.5,<0.3.0",optional = true } # watch require
 deepdiff = { version ="^5.7.0",optional = true } # dd.diff require
-pdbr = { version ="^0.6.9",optional = true } # post pdb require
+pdbr = { version =">=0.6.9,<0.8.0",optional = true } # post pdb require
 inputimeout = { version ="^1.0.0",optional = true } # post pdb require
 
 

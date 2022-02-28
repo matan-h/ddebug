@@ -118,11 +118,11 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "pdbr"
-version = "0.6.9"
+version = "0.7.0"
 description = "Pdb with Rich library."
 category = "main"
 optional = true
-python-versions = ">=3.7.12,<4.0.0"
+python-versions = ">=3.7.9,<4.0.0"
 
 [package.dependencies]
 icecream = ">=2.1.0,<3.0.0"
@@ -253,8 +253,8 @@ no-pdbr = ["watchpoints"]
 
 [metadata]
 lock-version = "1.1"
-python-versions = ">=3.7.12,<4.0" # the <4.0 is because rich Python requirement
-content-hash = "f6b43fd843b913279c8bfaa9bf5b1792a23f2b70ec3dfc89fc5ea0645aa6643e"
+python-versions = ">=3.7.12,<4.0"
+content-hash = "fd28e82da7b84db78ddf543f78fb19a03db47f456349b5c6fcdf3d2feb68b95e"
 
 [metadata.files]
 asttokens = [
@@ -300,8 +300,8 @@ ordered-set = [
     {file = "ordered-set-4.0.2.tar.gz", hash = "sha256:ba93b2df055bca202116ec44b9bead3df33ea63a7d5827ff8e16738b97f33a95"},
 ]
 pdbr = [
-    {file = "pdbr-0.6.9-py3-none-any.whl", hash = "sha256:97fee68ddd2ce3c516b3132b3de905c096b3f27717f8f364758d9f93756e9fcf"},
-    {file = "pdbr-0.6.9.tar.gz", hash = "sha256:4e6af027106013c4f016afa4207d0033f345c40053f81de51c660fc10c536495"},
+    {file = "pdbr-0.7.0-py3-none-any.whl", hash = "sha256:2e967be2fb064f5a550a7ecb02b580718575bede67c9d77c4c00cf08bb607328"},
+    {file = "pdbr-0.7.0.tar.gz", hash = "sha256:99c1f967c1569935a016542538b38100ab66d97bf5f59592956b7ac869a75fa1"},
 ]
 pure-eval = [
     {file = "pure_eval-0.2.2-py3-none-any.whl", hash = "sha256:01eaab343580944bc56080ebe0a674b39ec44a945e6d09ba7db3cb8cec289350"},
