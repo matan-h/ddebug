@@ -19,7 +19,7 @@ if watchpoints:
         """
         custom WatchPrint
         """
-        def __init__(self, file=sys.stderr, stack_limit=None):
+        def __init__(self, file=sys.stderr, stack_limit=None,custom_printer=None):
             super().__init__(file, stack_limit)
             self.source_printer = self.printer
             self.printer = self._printer

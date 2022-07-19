@@ -20,22 +20,23 @@ keywords = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.7.12,<4.0" # the <4.0 is because rich Python requirement
-snoop = ">=0.3,<0.5" # main require
-icecream = "^2.1.0" # main require
-rich = "^10.5.0" # main require
-friendly-traceback = ">=0.4.70,<0.6.0" # dd-traceback errors require
+python = "^3.7.12"
+# snoop = ">=0.3,<0.5" # main require
+snoop = "^0.4.1" # main require
+icecream = "^2.1.2" # main require
+rich = "^12.0.0" # main require
+friendly-traceback = "^0.5.46" # dd-traceback errors require
 # optional
-watchpoints = { version =">=0.2.5,<0.3.0",optional = true } # watch require
-deepdiff = { version ="^5.7.0",optional = true } # dd.diff require
-pdbr = { version ="^0.6.9",optional = true } # post pdb require
-inputimeout = { version ="^1.0.0",optional = true } # post pdb require
+watchpoints = "^0.2.5" # watch require
+deepdiff = "^5.8.1" # dd.diff require
+pdbr = "^0.7.1" # post pdb require
+inputimeout = "^1.0.4" # post pdb require
 
 
 
 [tool.poetry.extras]
 full = ["watchpoints", "deepdiff", "pdbr", "inputimeout"]
-no-pdbr = ["watchpoints"]
+no-pdbr = ["watchpoints","deepdiff"]
 
 [build-system]
 requires = ["poetry>=0.12"]
