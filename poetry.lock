@@ -21,7 +21,7 @@ optional = false
 python-versions = "*"
 
 [package.extras]
-tests = ["pytest", "django", "pandas (>=0.24.2)", "numpy (>=1.16.3)", "chainmap", "Django (<2)", "pandas (>=0.24.2,<0.25)", "numpy (>=1.16.3,<1.17)", "Django (<3)", "pandas (>=0.24.2,<0.26)", "numpy (>=1.16.3,<1.19)"]
+tests = ["numpy (>=1.16.3,<1.19)", "pandas (>=0.24.2,<0.26)", "Django (<3)", "numpy (>=1.16.3,<1.17)", "pandas (>=0.24.2,<0.25)", "Django (<2)", "chainmap", "numpy (>=1.16.3)", "pandas (>=0.24.2)", "django", "pytest"]
 
 [[package]]
 name = "colorama"
@@ -40,7 +40,7 @@ optional = false
 python-versions = "*"
 
 [package.extras]
-test = ["flake8 (==3.7.8)", "hypothesis (==3.55.3)"]
+test = ["hypothesis (==3.55.3)", "flake8 (==3.7.8)"]
 
 [[package]]
 name = "deepdiff"
@@ -80,7 +80,7 @@ stack-data = ">=0.2.0"
 
 [[package]]
 name = "icecream"
-version = "2.1.2"
+version = "2.1.3"
 description = "Never use print() to debug again; inspect variables, expressions, and program execution with a single, simple function call."
 category = "main"
 optional = false
@@ -134,8 +134,8 @@ rich = ">=12.0.0,<13.0.0"
 sqlparse = ">=0.4.2,<0.5.0"
 
 [package.extras]
-celery = ["celery (>=5.2.2,<6.0.0)"]
 ipython = ["ipython (>=7.7,<8.0)"]
+celery = ["celery (>=5.2.2,<6.0.0)"]
 
 [[package]]
 name = "pure-eval"
@@ -204,7 +204,7 @@ pygments = "*"
 six = "*"
 
 [package.extras]
-tests = ["pytest", "littleutils", "prettyprinter", "pprintpp", "pandas (>=0.24.2)", "numpy (>=1.16.5)", "birdseye", "pytest-order (<=0.11.0)", "django", "pytest-order"]
+tests = ["pytest-order", "django", "pytest-order (<=0.11.0)", "birdseye", "numpy (>=1.16.5)", "pandas (>=0.24.2)", "pprintpp", "prettyprinter", "littleutils", "pytest"]
 
 [[package]]
 name = "sqlparse"
@@ -228,7 +228,7 @@ executing = "*"
 pure-eval = "*"
 
 [package.extras]
-tests = ["pytest", "typeguard", "pygments", "littleutils", "cython"]
+tests = ["cython", "littleutils", "pygments", "typeguard", "pytest"]
 
 [[package]]
 name = "typing-extensions"
@@ -288,8 +288,8 @@ friendly-traceback = [
     {file = "friendly_traceback-0.5.46-py3-none-any.whl", hash = "sha256:b2f43ea10846860a0381c7f343acb4b4678b2bc93fd1641287a1db9238306add"},
 ]
 icecream = [
-    {file = "icecream-2.1.2-py2.py3-none-any.whl", hash = "sha256:04b9cea4d9931cf6960db0430ebf11fa34464ce7152e384ddf50f96d25b201b4"},
-    {file = "icecream-2.1.2.tar.gz", hash = "sha256:09300b2d1c678712410cbd47c95198eb1b580f66f311a554ccd6b9e758ece0ee"},
+    {file = "icecream-2.1.3-py2.py3-none-any.whl", hash = "sha256:757aec31ad4488b949bc4f499d18e6e5973c40cc4d4fc607229e78cfaec94c34"},
+    {file = "icecream-2.1.3.tar.gz", hash = "sha256:0aa4a7c3374ec36153a1d08f81e3080e83d8ac1eefd97d2f4fe9544e8f9b49de"},
 ]
 inputimeout = [
     {file = "inputimeout-1.0.4-py3-none-any.whl", hash = "sha256:f4e23d27753cfc25268eefc8d52a3edc46280ad831d226617c51882423475a43"},
