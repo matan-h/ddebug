@@ -10,7 +10,7 @@ python-versions = "*"
 six = "*"
 
 [package.extras]
-test = ["astroid", "pytest"]
+test = ["pytest", "astroid"]
 
 [[package]]
 name = "cheap-repr"
@@ -21,7 +21,7 @@ optional = false
 python-versions = "*"
 
 [package.extras]
-tests = ["pytest", "django", "pandas (>=0.24.2)", "numpy (>=1.16.3)", "chainmap", "Django (<2)", "pandas (>=0.24.2,<0.25)", "numpy (>=1.16.3,<1.17)", "Django (<3)", "pandas (>=0.24.2,<0.26)", "numpy (>=1.16.3,<1.19)"]
+tests = ["numpy (>=1.16.3,<1.19)", "pandas (>=0.24.2,<0.26)", "Django (<3)", "numpy (>=1.16.3,<1.17)", "pandas (>=0.24.2,<0.25)", "Django (<2)", "chainmap", "numpy (>=1.16.3)", "pandas (>=0.24.2)", "django", "pytest"]
 
 [[package]]
 name = "colorama"
@@ -40,7 +40,7 @@ optional = false
 python-versions = "*"
 
 [package.extras]
-test = ["flake8 (==3.7.8)", "hypothesis (==3.55.3)"]
+test = ["hypothesis (==3.55.3)", "flake8 (==3.7.8)"]
 
 [[package]]
 name = "deepdiff"
@@ -54,7 +54,7 @@ python-versions = ">=3.6"
 ordered-set = ">=4.1.0,<4.2.0"
 
 [package.extras]
-cli = ["click (==8.0.3)", "pyyaml (==5.4.1)", "toml (==0.10.2)", "clevercsv (==0.7.1)"]
+cli = ["clevercsv (==0.7.1)", "toml (==0.10.2)", "pyyaml (==5.4.1)", "click (==8.0.3)"]
 
 [[package]]
 name = "executing"
@@ -66,7 +66,7 @@ python-versions = "*"
 
 [[package]]
 name = "friendly-traceback"
-version = "0.5.46"
+version = "0.5.47"
 description = "Friendlier tracebacks in any language."
 category = "main"
 optional = false
@@ -134,8 +134,8 @@ rich = ">=12.0.0,<13.0.0"
 sqlparse = ">=0.4.2,<0.5.0"
 
 [package.extras]
-celery = ["celery (>=5.2.2,<6.0.0)"]
 ipython = ["ipython (>=7.7,<8.0)"]
+celery = ["celery (>=5.2.2,<6.0.0)"]
 
 [[package]]
 name = "pure-eval"
@@ -204,7 +204,7 @@ pygments = "*"
 six = "*"
 
 [package.extras]
-tests = ["pytest", "littleutils", "prettyprinter", "pprintpp", "pandas (>=0.24.2)", "numpy (>=1.16.5)", "birdseye", "pytest-order (<=0.11.0)", "django", "pytest-order"]
+tests = ["pytest-order", "django", "pytest-order (<=0.11.0)", "birdseye", "numpy (>=1.16.5)", "pandas (>=0.24.2)", "pprintpp", "prettyprinter", "littleutils", "pytest"]
 
 [[package]]
 name = "sqlparse"
@@ -228,7 +228,7 @@ executing = "*"
 pure-eval = "*"
 
 [package.extras]
-tests = ["pytest", "typeguard", "pygments", "littleutils", "cython"]
+tests = ["cython", "littleutils", "pygments", "typeguard", "pytest"]
 
 [[package]]
 name = "typing-extensions"
@@ -284,8 +284,8 @@ executing = [
     {file = "executing-0.8.3.tar.gz", hash = "sha256:c6554e21c6b060590a6d3be4b82fb78f8f0194d809de5ea7df1c093763311501"},
 ]
 friendly-traceback = [
-    {file = "friendly-traceback-0.5.46.tar.gz", hash = "sha256:175865eb69ed624c8f6ed064a56a8d6d0803e5a8c2bfcf234176865b742432d8"},
-    {file = "friendly_traceback-0.5.46-py3-none-any.whl", hash = "sha256:b2f43ea10846860a0381c7f343acb4b4678b2bc93fd1641287a1db9238306add"},
+    {file = "friendly-traceback-0.5.47.tar.gz", hash = "sha256:28caeb35ebd35fa7e0ad6a757b29f8b70b297ed9a57dd979ed832a53247fdad5"},
+    {file = "friendly_traceback-0.5.47-py3-none-any.whl", hash = "sha256:7f93391220d46e2aba2d4690304243981f01c4a88d4df391a2b086e4aafb2ae4"},
 ]
 icecream = [
     {file = "icecream-2.1.2-py2.py3-none-any.whl", hash = "sha256:04b9cea4d9931cf6960db0430ebf11fa34464ce7152e384ddf50f96d25b201b4"},
