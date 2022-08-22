@@ -21,7 +21,7 @@ optional = false
 python-versions = "*"
 
 [package.extras]
-tests = ["pytest", "django", "pandas (>=0.24.2)", "numpy (>=1.16.3)", "chainmap", "Django (<2)", "pandas (>=0.24.2,<0.25)", "numpy (>=1.16.3,<1.17)", "Django (<3)", "pandas (>=0.24.2,<0.26)", "numpy (>=1.16.3,<1.19)"]
+tests = ["numpy (>=1.16.3,<1.19)", "pandas (>=0.24.2,<0.26)", "Django (<3)", "numpy (>=1.16.3,<1.17)", "pandas (>=0.24.2,<0.25)", "Django (<2)", "chainmap", "numpy (>=1.16.3)", "pandas (>=0.24.2)", "django", "pytest"]
 
 [[package]]
 name = "colorama"
@@ -40,7 +40,7 @@ optional = false
 python-versions = "*"
 
 [package.extras]
-test = ["flake8 (==3.7.8)", "hypothesis (==3.55.3)"]
+test = ["hypothesis (==3.55.3)", "flake8 (==3.7.8)"]
 
 [[package]]
 name = "deepdiff"
@@ -121,7 +121,7 @@ dev = ["pytest", "black", "mypy"]
 
 [[package]]
 name = "pdbr"
-version = "0.7.1"
+version = "0.7.2"
 description = "Pdb with Rich library."
 category = "main"
 optional = false
@@ -134,8 +134,8 @@ rich = ">=12.0.0,<13.0.0"
 sqlparse = ">=0.4.2,<0.5.0"
 
 [package.extras]
+ipython = ["ipython"]
 celery = ["celery (>=5.2.2,<6.0.0)"]
-ipython = ["ipython (>=7.7,<8.0)"]
 
 [[package]]
 name = "pure-eval"
@@ -204,7 +204,7 @@ pygments = "*"
 six = "*"
 
 [package.extras]
-tests = ["pytest", "littleutils", "prettyprinter", "pprintpp", "pandas (>=0.24.2)", "numpy (>=1.16.5)", "birdseye", "pytest-order (<=0.11.0)", "django", "pytest-order"]
+tests = ["pytest-order", "django", "pytest-order (<=0.11.0)", "birdseye", "numpy (>=1.16.5)", "pandas (>=0.24.2)", "pprintpp", "prettyprinter", "littleutils", "pytest"]
 
 [[package]]
 name = "sqlparse"
@@ -228,7 +228,7 @@ executing = "*"
 pure-eval = "*"
 
 [package.extras]
-tests = ["pytest", "typeguard", "pygments", "littleutils", "cython"]
+tests = ["cython", "littleutils", "pygments", "typeguard", "pytest"]
 
 [[package]]
 name = "typing-extensions"
@@ -303,8 +303,8 @@ ordered-set = [
     {file = "ordered_set-4.1.0-py3-none-any.whl", hash = "sha256:046e1132c71fcf3330438a539928932caf51ddbc582496833e23de611de14562"},
 ]
 pdbr = [
-    {file = "pdbr-0.7.1-py3-none-any.whl", hash = "sha256:39fedce0a4dfd5a45bbc7a8f9d69924404ce414d39f6d6b83212b0711db46535"},
-    {file = "pdbr-0.7.1.tar.gz", hash = "sha256:9c9bd8856b668077a046a07860f8316f356e9e5e776874d9adf3915bb87a50c6"},
+    {file = "pdbr-0.7.2-py3-none-any.whl", hash = "sha256:1e208888365c00e9baae0f10c3be301e2fa81b95934b9560aba773344def6a77"},
+    {file = "pdbr-0.7.2.tar.gz", hash = "sha256:465e7aa17288a6afa97642bef4dbf30a1d9ebd759c17ccc7b7e068f6fd6ec83b"},
 ]
 pure-eval = [
     {file = "pure_eval-0.2.2-py3-none-any.whl", hash = "sha256:01eaab343580944bc56080ebe0a674b39ec44a945e6d09ba7db3cb8cec289350"},
