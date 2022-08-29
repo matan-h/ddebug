@@ -21,7 +21,7 @@ optional = false
 python-versions = "*"
 
 [package.extras]
-tests = ["pytest", "django", "pandas (>=0.24.2)", "numpy (>=1.16.3)", "chainmap", "Django (<2)", "pandas (>=0.24.2,<0.25)", "numpy (>=1.16.3,<1.17)", "Django (<3)", "pandas (>=0.24.2,<0.26)", "numpy (>=1.16.3,<1.19)"]
+tests = ["Django (<2)", "Django (<3)", "chainmap", "django", "numpy (>=1.16.3)", "numpy (>=1.16.3,<1.17)", "numpy (>=1.16.3,<1.19)", "pandas (>=0.24.2)", "pandas (>=0.24.2,<0.25)", "pandas (>=0.24.2,<0.26)", "pytest"]
 
 [[package]]
 name = "colorama"
@@ -54,7 +54,7 @@ python-versions = ">=3.6"
 ordered-set = ">=4.1.0,<4.2.0"
 
 [package.extras]
-cli = ["click (==8.0.3)", "pyyaml (==5.4.1)", "toml (==0.10.2)", "clevercsv (==0.7.1)"]
+cli = ["clevercsv (==0.7.1)", "click (==8.0.3)", "pyyaml (==5.4.1)", "toml (==0.10.2)"]
 
 [[package]]
 name = "executing"
@@ -117,11 +117,11 @@ optional = false
 python-versions = ">=3.7"
 
 [package.extras]
-dev = ["pytest", "black", "mypy"]
+dev = ["black", "mypy", "pytest"]
 
 [[package]]
 name = "pdbr"
-version = "0.7.1"
+version = "0.7.3"
 description = "Pdb with Rich library."
 category = "main"
 optional = false
@@ -135,7 +135,7 @@ sqlparse = ">=0.4.2,<0.5.0"
 
 [package.extras]
 celery = ["celery (>=5.2.2,<6.0.0)"]
-ipython = ["ipython (>=7.7,<8.0)"]
+ipython = ["ipython"]
 
 [[package]]
 name = "pure-eval"
@@ -204,7 +204,7 @@ pygments = "*"
 six = "*"
 
 [package.extras]
-tests = ["pytest", "littleutils", "prettyprinter", "pprintpp", "pandas (>=0.24.2)", "numpy (>=1.16.5)", "birdseye", "pytest-order (<=0.11.0)", "django", "pytest-order"]
+tests = ["birdseye", "django", "littleutils", "numpy (>=1.16.5)", "pandas (>=0.24.2)", "pprintpp", "prettyprinter", "pytest", "pytest-order", "pytest-order (<=0.11.0)"]
 
 [[package]]
 name = "sqlparse"
@@ -228,7 +228,7 @@ executing = "*"
 pure-eval = "*"
 
 [package.extras]
-tests = ["pytest", "typeguard", "pygments", "littleutils", "cython"]
+tests = ["cython", "littleutils", "pygments", "pytest", "typeguard"]
 
 [[package]]
 name = "typing-extensions"
@@ -303,8 +303,8 @@ ordered-set = [
     {file = "ordered_set-4.1.0-py3-none-any.whl", hash = "sha256:046e1132c71fcf3330438a539928932caf51ddbc582496833e23de611de14562"},
 ]
 pdbr = [
-    {file = "pdbr-0.7.1-py3-none-any.whl", hash = "sha256:39fedce0a4dfd5a45bbc7a8f9d69924404ce414d39f6d6b83212b0711db46535"},
-    {file = "pdbr-0.7.1.tar.gz", hash = "sha256:9c9bd8856b668077a046a07860f8316f356e9e5e776874d9adf3915bb87a50c6"},
+    {file = "pdbr-0.7.3-py3-none-any.whl", hash = "sha256:4f4f051e8a72724fa9c38e7d7db943e32563d5387e37dd06ded6282fae930a07"},
+    {file = "pdbr-0.7.3.tar.gz", hash = "sha256:8005dbdc06cc0c934e0e1105d04da727699a589ff1899410e54de15ca8adc5ca"},
 ]
 pure-eval = [
     {file = "pure_eval-0.2.2-py3-none-any.whl", hash = "sha256:01eaab343580944bc56080ebe0a674b39ec44a945e6d09ba7db3cb8cec289350"},
