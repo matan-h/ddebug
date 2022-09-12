@@ -21,7 +21,7 @@ optional = false
 python-versions = "*"
 
 [package.extras]
-tests = ["pytest", "django", "pandas (>=0.24.2)", "numpy (>=1.16.3)", "chainmap", "Django (<2)", "pandas (>=0.24.2,<0.25)", "numpy (>=1.16.3,<1.17)", "Django (<3)", "pandas (>=0.24.2,<0.26)", "numpy (>=1.16.3,<1.19)"]
+tests = ["Django", "Django (<2)", "Django (<3)", "chainmap", "numpy (>=1.16.3)", "numpy (>=1.16.3,<1.17)", "numpy (>=1.16.3,<1.19)", "pandas (>=0.24.2)", "pandas (>=0.24.2,<0.25)", "pandas (>=0.24.2,<0.26)", "pytest"]
 
 [[package]]
 name = "colorama"
@@ -54,7 +54,7 @@ python-versions = ">=3.6"
 ordered-set = ">=4.1.0,<4.2.0"
 
 [package.extras]
-cli = ["click (==8.0.3)", "pyyaml (==5.4.1)", "toml (==0.10.2)", "clevercsv (==0.7.1)"]
+cli = ["clevercsv (==0.7.1)", "click (==8.0.3)", "pyyaml (==5.4.1)", "toml (==0.10.2)"]
 
 [[package]]
 name = "executing"
@@ -66,7 +66,7 @@ python-versions = "*"
 
 [[package]]
 name = "friendly-traceback"
-version = "0.5.46"
+version = "0.5.56"
 description = "Friendlier tracebacks in any language."
 category = "main"
 optional = false
@@ -76,7 +76,7 @@ python-versions = ">=3.6"
 asttokens = ">=2.0.4"
 executing = ">=0.8.3"
 pure-eval = ">=0.2.1"
-stack-data = ">=0.2.0"
+stack-data = ">=0.5.0"
 
 [[package]]
 name = "icecream"
@@ -117,7 +117,7 @@ optional = false
 python-versions = ">=3.7"
 
 [package.extras]
-dev = ["pytest", "black", "mypy"]
+dev = ["black", "mypy", "pytest"]
 
 [[package]]
 name = "pdbr"
@@ -204,7 +204,7 @@ pygments = "*"
 six = "*"
 
 [package.extras]
-tests = ["pytest", "littleutils", "prettyprinter", "pprintpp", "pandas (>=0.24.2)", "numpy (>=1.16.5)", "birdseye", "pytest-order (<=0.11.0)", "django", "pytest-order"]
+tests = ["Django", "birdseye", "littleutils", "numpy (>=1.16.5)", "pandas (>=0.24.2)", "pprintpp", "prettyprinter", "pytest", "pytest-order", "pytest-order (<=0.11.0)"]
 
 [[package]]
 name = "sqlparse"
@@ -216,7 +216,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "stack-data"
-version = "0.3.0"
+version = "0.5.0"
 description = "Extract data from python stack frames and tracebacks for informative displays"
 category = "main"
 optional = false
@@ -228,7 +228,7 @@ executing = "*"
 pure-eval = "*"
 
 [package.extras]
-tests = ["pytest", "typeguard", "pygments", "littleutils", "cython"]
+tests = ["cython", "littleutils", "pygments", "pytest", "typeguard"]
 
 [[package]]
 name = "typing-extensions"
@@ -284,8 +284,8 @@ executing = [
     {file = "executing-0.8.3.tar.gz", hash = "sha256:c6554e21c6b060590a6d3be4b82fb78f8f0194d809de5ea7df1c093763311501"},
 ]
 friendly-traceback = [
-    {file = "friendly-traceback-0.5.46.tar.gz", hash = "sha256:175865eb69ed624c8f6ed064a56a8d6d0803e5a8c2bfcf234176865b742432d8"},
-    {file = "friendly_traceback-0.5.46-py3-none-any.whl", hash = "sha256:b2f43ea10846860a0381c7f343acb4b4678b2bc93fd1641287a1db9238306add"},
+    {file = "friendly-traceback-0.5.56.tar.gz", hash = "sha256:bae14d50c4a6e5a3cbab06566e89149b2cf18161b7ca5e73c1ae00bd92dc6e9e"},
+    {file = "friendly_traceback-0.5.56-py3-none-any.whl", hash = "sha256:b83772bc1fc47df942039720bcb982c90492cea33a9494c8409fec8c6345a45e"},
 ]
 icecream = [
     {file = "icecream-2.1.2-py2.py3-none-any.whl", hash = "sha256:04b9cea4d9931cf6960db0430ebf11fa34464ce7152e384ddf50f96d25b201b4"},
@@ -336,8 +336,8 @@ sqlparse = [
     {file = "sqlparse-0.4.2.tar.gz", hash = "sha256:0c00730c74263a94e5a9919ade150dfc3b19c574389985446148402998287dae"},
 ]
 stack-data = [
-    {file = "stack_data-0.3.0-py3-none-any.whl", hash = "sha256:aa1d52d14d09c7a9a12bb740e6bdfffe0f5e8f4f9218d85e7c73a8c37f7ae38d"},
-    {file = "stack_data-0.3.0.tar.gz", hash = "sha256:77bec1402dcd0987e9022326473fdbcc767304892a533ed8c29888dacb7dddbc"},
+    {file = "stack_data-0.5.0-py3-none-any.whl", hash = "sha256:66d2ebd3d7f29047612ead465b6cae5371006a71f45037c7e2507d01367bce3b"},
+    {file = "stack_data-0.5.0.tar.gz", hash = "sha256:715c8855fbf5c43587b141e46cc9d9339cc0d1f8d6e0f98ed0d01c6cb974e29f"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.3.0-py3-none-any.whl", hash = "sha256:25642c956049920a5aa49edcdd6ab1e06d7e5d467fc00e0506c44ac86fbfca02"},
