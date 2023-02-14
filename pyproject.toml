@@ -29,7 +29,7 @@ friendly-traceback = "^0.5.46" # dd-traceback errors require
 # optional
 watchpoints = "^0.2.5" # watch require
 deepdiff = "^5.8.1" # dd.diff require
-pdbr = "^0.7.1" # post pdb require
+pdbr = ">=0.7.1,<0.9.0" # post pdb require
 inputimeout = "^1.0.4" # post pdb require
 
 
